@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsc && istanbul cover node_modules/mocha/bin/_mocha && istanbul check-coverage"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,12 @@
   },
   "homepage": "https://github.com/sergey-shandar/iterator-lib#readme",
   "devDependencies": {
+    "@types/chai": "^4.0.8",
+    "@types/mocha": "^2.2.44",
+    "chai": "^4.1.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^4.0.1",
     "typescript": "^2.6.2"
-  }
+  },
+  "dependencies": {}
 }
