@@ -1,0 +1,26 @@
+{
+  "name": "iterator-lib",
+  "version": "0.0.0",
+  "description": "Iterator library for JavaScript and TypeScript",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergey-shandar/iterator-lib.git"
+  },
+  "keywords": [
+    "iterator"
+  ],
+  "author": "Sergey Shandar",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/sergey-shandar/iterator-lib/issues"
+  },
+  "homepage": "https://github.com/sergey-shandar/iterator-lib#readme",
+  "devDependencies": {
+    "typescript": "^2.6.2"
+  }
+}
