@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
+    "prepare": "npm test",
     "test": "tsc && istanbul cover node_modules/mocha/bin/_mocha && istanbul check-coverage"
   },
   "repository": {
