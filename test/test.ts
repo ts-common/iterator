@@ -39,3 +39,10 @@ describe("values", () => {
         result.should.deep.equal([2, 2, 3])
     })
 })
+
+describe("entries", () => {
+    it("array", () => {
+        const result = Array.from(_.entries({ "1": 2, "2": 2, "3": 3 }))
+        result.should.deep.equal([["1", 2], ["2", 2], ["3", 3]])
+    })
+})

@@ -25,7 +25,11 @@ export interface ObjectAsMap<T> {
 }
 
 export function values<T>(input: ObjectAsMap<T>): Iterable<T> {
-    return map(Object.getOwnPropertyNames(input), k => input[k])
+    return map(Object.getOwnPropertyNames(input), name => input[name])
+}
+
+export function entries<T>(input: ObjectAsMap<T>): Iterable<[string, T]> {
+    return map(Object.getOwnPropertyNames(input), name => nameValue(name, input[name]))
 }
 
 export function nameValue<T>(name: string, value: T) : [string, T] {
