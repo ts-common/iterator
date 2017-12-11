@@ -1,26 +1,7 @@
-export interface ExtendedIterable<T> extends Iterable<T> {
-    map<R>(func: (v: T) => R): ExtendedIterable<R>
-    flatMap<R>(func: (v: T) => Iterable<R>): ExtendedIterable<R>
-    groupBy<R>(nameValue: (v: T) => [string, R], reduce: (a: R, b: R) => R): ObjectAsMap<R>
-    toArray(): T[]
-}
-
-export function iterable<T>(createIterator: () => Iterator<T>): ExtendedIterable<T> {
-    class Implementation implements ExtendedIterable<T> {
-        toArray(): T[] {
-            return Array.from(this);
-        }
+export function iterable<T>(createIterator: () => Iterator<T>): Iterable<T> {
+    class Implementation implements Iterable<T> {
         [Symbol.iterator]() {
             return createIterator()
-        }
-        map<R>(func: (v: T) => R) {
-            return map(this, func)
-        }
-        flatMap<R>(func: (v: T) => Iterable<R>) {
-            return flatMap(this, func)
-        }
-        groupBy<R>(nameValue: (v: T) => [string, R], reduce: (a: R, b: R) => R): ObjectAsMap<R> {
-            return groupBy(this.map(nameValue), reduce)
         }
     }
     return new Implementation()
@@ -30,7 +11,7 @@ export interface ObjectAsMap<T> {
     readonly [key: string]: T;
 }
 
-export function map<T, I>(input: Iterable<I>, func: (v: I) => T): ExtendedIterable<T> {
+export function map<T, I>(input: Iterable<I>, func: (v: I) => T): Iterable<T> {
     function *iterator() {
         for (const v of input) {
             yield func(v)
@@ -39,7 +20,7 @@ export function map<T, I>(input: Iterable<I>, func: (v: I) => T): ExtendedIterab
     return iterable(iterator)
 }
 
-export function flatten<T>(input: Iterable<Iterable<T>>): ExtendedIterable<T> {
+export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
     function *iterator() {
         for (const v of input) {
             yield *v
@@ -48,17 +29,15 @@ export function flatten<T>(input: Iterable<Iterable<T>>): ExtendedIterable<T> {
     return iterable(iterator)
 }
 
-export function flatMap<T, I>(input: Iterable<I>, func: (v: I) => Iterable<T>)
-    : ExtendedIterable<T>
-{
+export function flatMap<T, I>(input: Iterable<I>, func: (v: I) => Iterable<T>): Iterable<T> {
     return flatten(map(input, func))
 }
 
-export function values<T>(input: ObjectAsMap<T>): ExtendedIterable<T> {
+export function values<T>(input: ObjectAsMap<T>): Iterable<T> {
     return map(Object.getOwnPropertyNames(input), name => input[name])
 }
 
-export function entries<T>(input: ObjectAsMap<T>): ExtendedIterable<[string, T]> {
+export function entries<T>(input: ObjectAsMap<T>): Iterable<[string, T]> {
     return map(Object.getOwnPropertyNames(input), name => nameValue(name, input[name]))
 }
 
@@ -66,7 +45,7 @@ export function nameValue<T>(name: string, value: T) : [string, T] {
     return [name, value]
 }
 
-export function repeat<T>(v: T, count: number): ExtendedIterable<T> {
+export function repeat<T>(v: T, count: number): Iterable<T> {
     function *iterator() {
         for (let i = 0; i < count; ++i) {
             yield v
