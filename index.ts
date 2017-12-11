@@ -1,10 +1,14 @@
+export function iterable<T>(createIterator: () => Iterator<T>): Iterable<T> {
+    return { [Symbol.iterator]: createIterator }
+}
+
 export function map<T, I>(input: Iterable<I>, func: (v: I) => T): Iterable<T> {
     function *iterator() {
         for (const v of input) {
             yield func(v)
         }
     }
-    return { [Symbol.iterator]: iterator }
+    return iterable(iterator)
 }
 
 export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
@@ -13,7 +17,7 @@ export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
             yield *v
         }
     }
-    return { [Symbol.iterator]: iterator }
+    return iterable(iterator)
 }
 
 export function flatMap<T, I>(input: Iterable<I>, func: (v: I) => Iterable<T>): Iterable<T> {
@@ -34,6 +38,15 @@ export function entries<T>(input: ObjectAsMap<T>): Iterable<[string, T]> {
 
 export function nameValue<T>(name: string, value: T) : [string, T] {
     return [name, value]
+}
+
+export function repeat<T>(v: T, count: number): Iterable<T> {
+    function *iterator() {
+        for (let i = 0; i < count; ++i) {
+            yield v
+        }
+    }
+    return iterable(iterator)
 }
 
 export function groupBy<T>(input: Iterable<[string, T]>, reduce: (a: T, b: T) => T)

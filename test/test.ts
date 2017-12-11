@@ -46,3 +46,10 @@ describe("entries", () => {
         result.should.deep.equal([["1", 2], ["2", 2], ["3", 3]])
     })
 })
+
+describe("repeat", () => {
+    it("array", () => {
+        const result = Array.from(_.repeat("Hello!", 5))
+        result.should.deep.equal(["Hello!", "Hello!", "Hello!", "Hello!", "Hello!"])
+    })
+})
