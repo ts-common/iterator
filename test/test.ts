@@ -53,3 +53,22 @@ describe("repeat", () => {
         result.should.deep.equal(["Hello!", "Hello!", "Hello!", "Hello!", "Hello!"])
     })
 })
+
+describe("ExtendedIterable", () => {
+    it("map", () => {
+        const result = _.map([1, 2, 3], x => x + x).map(x => x + x).toArray()
+        result.should.deep.equal([4, 8, 12])
+    })
+    it("flatMap", () => {
+        const result = _
+            .map([[1, 2], [2, 3], [3, 4], [], [6, 0, -1]], v => v)
+            .flatMap(v => v)
+            .toArray()
+        result.should.deep.equal([1, 2, 2, 3, 3, 4, 6, 0, -1])
+    })
+    it("groupBy", () => {
+        const m = _.map([1, 2, 3, 1, 3, 2, 3, 3], x => _.nameValue(x.toString(), 1))
+        const result = m.groupBy(v => v, (a, b) => a + b, )
+        result.should.deep.equal({ "1": 2, "2": 2, "3": 4 })
+    })
+})
