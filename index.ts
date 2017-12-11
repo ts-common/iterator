@@ -28,14 +28,19 @@ export function values<T>(input: ObjectAsMap<T>): Iterable<T> {
     return map(Object.getOwnPropertyNames(input), k => input[k])
 }
 
-export function groupBy<T>(input: Iterable<T>, getKey: (v: T) => string, reduce: (a: T, b: T) => T)
+export function nameValue<T>(name: string, value: T) : [string, T] {
+    return [name, value]
+}
+
+export function groupBy<T>(input: Iterable<[string, T]>, reduce: (a: T, b: T) => T)
     : ObjectAsMap<T>
 {
     const result : { [key: string]: T } = {}
     for (const v of input) {
-        const key = getKey(v)
-        const prior = result[key]
-        result[key] = prior === undefined ? v : reduce(prior, v)
+        const name = v[0]
+        const value = v[1]
+        const prior = result[name]
+        result[name] = prior === undefined ? value : reduce(prior, value)
     }
     return result
 }

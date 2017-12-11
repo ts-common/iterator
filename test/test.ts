@@ -27,9 +27,9 @@ describe("flatMap", () => {
 
 describe("groupBy", () => {
     it("array", () => {
-        const m = _.map([1, 2, 3, 1, 3, 2, 3, 3], x => [x, 1])
-        const result = _.groupBy(m, x => x[0].toString(), (a, b) => [a[0], a[1] + b[1]])
-        result.should.deep.equal({ "1": [1, 2], "2": [2, 2], "3": [3, 4]})
+        const m = _.map([1, 2, 3, 1, 3, 2, 3, 3], x => _.nameValue(x.toString(), 1))
+        const result = _.groupBy(m, (a, b) => a + b, )
+        result.should.deep.equal({ "1": 2, "2": 2, "3": 4 })
     })
 })
 
