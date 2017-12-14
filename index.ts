@@ -48,13 +48,17 @@ export function nameValue<T>(name: string, value: T) : [string, T] {
     return [name, value]
 }
 
-export function repeat<T>(v: T, count: number): Iterable<T> {
+export function generate<T>(func: (i: number) => T, count: number): Iterable<T> {
     function *iterator() {
         for (let i = 0; i < count; ++i) {
-            yield v
+            yield func(i)
         }
     }
     return iterable(iterator)
+}
+
+export function repeat<T>(v: T, count: number): Iterable<T> {
+    return generate(_ => v, count)
 }
 
 export function groupBy<T>(input: Iterable<[string, T]>, reduce: (a: T, b: T) => T)
