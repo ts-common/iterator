@@ -53,3 +53,17 @@ describe("repeat", () => {
         result.should.deep.equal(["Hello!", "Hello!", "Hello!", "Hello!", "Hello!"])
     })
 })
+
+describe("zip", () => {
+    it("array", () => {
+        const result = Array.from(_.zip([1, "b"], ["a", 2]))
+        result.should.deep.equal([[1, "a"], ["b", 2]])
+    })
+})
+
+describe("generate", () => {
+    it("infinite", () => {
+        const result = Array.from(_.zip(_.repeat(2), [1, 3]))
+        result.should.deep.equal([[2, 1], [2, 3]])
+    })
+})

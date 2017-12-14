@@ -48,16 +48,17 @@ export function nameValue<T>(name: string, value: T) : [string, T] {
     return [name, value]
 }
 
-export function generate<T>(func: (i: number) => T, count: number): Iterable<T> {
+export function generate<T>(func: (i: number) => T, count?: number): Iterable<T> {
+    const f: (i: number) => boolean = count === undefined ? _ => true : i => i < count
     function *iterator() {
-        for (let i = 0; i < count; ++i) {
+        for (let i = 0; f(i); ++i) {
             yield func(i)
         }
     }
     return iterable(iterator)
 }
 
-export function repeat<T>(v: T, count: number): Iterable<T> {
+export function repeat<T>(v: T, count?: number): Iterable<T> {
     return generate(_ => v, count)
 }
 
@@ -72,4 +73,25 @@ export function groupBy<T>(input: Iterable<[string, T]>, reduce: (a: T, b: T) =>
         result[name] = prior === undefined ? value : reduce(prior, value)
     }
     return result
+}
+
+export function zip<T>(...inputs: Iterable<T>[]): Iterable<T[]> {
+    function *iterator() {
+        const iterators = inputs.map(i => i[Symbol.iterator]())
+        while (true) {
+            const result = new Array<T>(inputs.length)
+            let i = 0;
+            for (const it of iterators) {
+                const v = it.next()
+                if (v.done) {
+                    return
+                } else {
+                    result[i] = v.value
+                }
+                ++i
+            }
+            yield result
+        }
+    }
+    return iterable(iterator)
 }
