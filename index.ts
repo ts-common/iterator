@@ -75,15 +75,22 @@ export function groupBy<T>(input: Iterable<[string, T]>, reduce: (a: T, b: T) =>
     return result
 }
 
-export function reduce<T>(input: Iterable<T>, func: (a: T, b: T) => T, init: T): T {
+export function reduce<T>(input: Iterable<T>, func: (a: T, b: T) => T, init: T): T
+export function reduce<T>(input: Iterable<T>, func: (a: T, b: T) => T): T|undefined
+
+export function reduce<T>(input: Iterable<T>, func: (a: T, b: T) => T, init?: T): T|undefined {
     for (const v of input) {
-        init = func(init, v)
+        init = init === undefined ? v : func(init, v)
     }
     return init
 }
 
 export function sum(input: Iterable<number>): number {
     return reduce(input, (a, b) => a + b, 0)
+}
+
+export function min(input: Iterable<number>): number|undefined {
+    return reduce(input, Math.min)
 }
 
 export function zip<T>(...inputs: Iterable<T>[]): Iterable<T[]> {

@@ -74,3 +74,13 @@ describe("sum", () => {
         result.should.equal(6)
     })
 })
+
+describe("min", () => {
+    it("min", () => {
+        const result = _.min([1, 2, 3])
+        if (result === undefined) {
+            throw "error"
+        }
+        result.should.equal(1)
+    })
+})
