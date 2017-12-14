@@ -48,6 +48,14 @@ export function nameValue<T>(name: string, value: T) : [string, T] {
     return [name, value]
 }
 
+export function getName<T>(nameValue: [string, T]): string {
+    return nameValue[0]
+}
+
+export function getValue<T>(nameValue: [string, T]): T {
+    return nameValue[1]
+}
+
 export function generate<T>(func: (i: number) => T, count?: number): Iterable<T> {
     const f: (i: number) => boolean = count === undefined ? _ => true : i => i < count
     function *iterator() {
@@ -66,11 +74,11 @@ export function groupBy<T>(input: Iterable<[string, T]>, reduce: (a: T, b: T) =>
     : ObjectAsMap<T>
 {
     const result : { [key: string]: T } = {}
-    for (const v of input) {
-        const name = v[0]
-        const value = v[1]
-        const prior = result[name]
-        result[name] = prior === undefined ? value : reduce(prior, value)
+    for (const nv of input) {
+        const n = getName(nv)
+        const v = getValue(nv)
+        const prior = result[n]
+        result[n] = prior === undefined ? v : reduce(prior, v)
     }
     return result
 }
