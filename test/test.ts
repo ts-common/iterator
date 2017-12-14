@@ -67,3 +67,10 @@ describe("generate", () => {
         result.should.deep.equal([[2, 1], [2, 3]])
     })
 })
+
+describe("sum", () => {
+    it("array", () => {
+        const result = _.sum([1, 2, 3])
+        result.should.equal(6)
+    })
+})

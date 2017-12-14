@@ -75,6 +75,17 @@ export function groupBy<T>(input: Iterable<[string, T]>, reduce: (a: T, b: T) =>
     return result
 }
 
+export function reduce<T>(input: Iterable<T>, func: (a: T, b: T) => T, init: T): T {
+    for (const v of input) {
+        init = func(init, v)
+    }
+    return init
+}
+
+export function sum(input: Iterable<number>): number {
+    return reduce(input, (a, b) => a + b, 0)
+}
+
 export function zip<T>(...inputs: Iterable<T>[]): Iterable<T[]> {
     function *iterator() {
         const iterators = inputs.map(i => i[Symbol.iterator]())
@@ -85,9 +96,8 @@ export function zip<T>(...inputs: Iterable<T>[]): Iterable<T[]> {
                 const v = it.next()
                 if (v.done) {
                     return
-                } else {
-                    result[i] = v.value
                 }
+                result[i] = v.value
                 ++i
             }
             yield result
