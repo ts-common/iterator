@@ -57,7 +57,7 @@ export function getValue<T>(nameValue: [string, T]): T {
 }
 
 export function generate<T>(func: (i: number) => T, count?: number): Iterable<T> {
-    const f: (i: number) => boolean = count === undefined ? _ => true : i => i < count
+    const f: (i: number) => boolean = count === undefined ? () => true : i => i < count
     function *iterator() {
         for (let i = 0; f(i); ++i) {
             yield func(i)
