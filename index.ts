@@ -124,3 +124,11 @@ export function zip<T>(...inputs: Iterable<T>[]): Iterable<T[]> {
     }
     return iterable(iterator)
 }
+
+export function toObject<T>(input: Iterable<[string, T]>): ObjectAsMap<T> {
+    const result: { [name: string]: T } = {}
+    for (const nv of input) {
+        result[getName(nv)] = getValue(nv)
+    }
+    return result
+}

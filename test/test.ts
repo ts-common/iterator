@@ -110,3 +110,10 @@ describe("max", () => {
         result.should.equal(-Infinity)
     })
 })
+
+describe("toObject", () => {
+    it("toObject", () => {
+        const result = _.toObject([["a", 2], ["b", 4]])
+        result.should.deep.equal({ a: 2, b: 4 })
+    })
+})
