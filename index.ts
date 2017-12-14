@@ -97,8 +97,12 @@ export function sum(input: Iterable<number>): number {
     return reduce(input, (a, b) => a + b, 0)
 }
 
-export function min(input: Iterable<number>): number|undefined {
-    return reduce(input, Math.min)
+export function min(input: Iterable<number>): number {
+    return reduce(input, Math.min, Infinity)
+}
+
+export function max(input: Iterable<number>): number {
+    return reduce(input, Math.max, -Infinity)
 }
 
 export function zip<T>(...inputs: Iterable<T>[]): Iterable<T[]> {

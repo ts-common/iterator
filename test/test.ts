@@ -68,6 +68,20 @@ describe("generate", () => {
     })
 })
 
+describe("reduce", () => {
+    it("no items", () => {
+        const result = _.reduce([], (a, b) => a)
+        chai.assert.isUndefined(result)
+    })
+    it("1", () => {
+        const result = _.reduce([1], (a, b) => a + b)
+        if (result === undefined) {
+            throw "undefined"
+        }
+        result.should.equal(1)
+    })
+})
+
 describe("sum", () => {
     it("array", () => {
         const result = _.sum([1, 2, 3])
@@ -76,11 +90,23 @@ describe("sum", () => {
 })
 
 describe("min", () => {
-    it("min", () => {
+    it("3", () => {
         const result = _.min([1, 2, 3])
-        if (result === undefined) {
-            throw "error"
-        }
         result.should.equal(1)
+    })
+    it("0", () => {
+        const result = _.min([])
+        result.should.equal(Infinity)
+    })
+})
+
+describe("max", () => {
+    it("3", () => {
+        const result = _.max([1, 2, 3])
+        result.should.equal(3)
+    })
+    it("0", () => {
+        const result = _.max([])
+        result.should.equal(-Infinity)
     })
 })
