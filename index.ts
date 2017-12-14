@@ -11,10 +11,12 @@ export interface ObjectAsMap<T> {
     readonly [key: string]: T;
 }
 
-export function map<T, I>(input: Iterable<I>, func: (v: I) => T): Iterable<T> {
+export function map<T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Iterable<T> {
     function *iterator() {
+        let i = 0
         for (const v of input) {
-            yield func(v)
+            yield func(v, i)
+            ++i
         }
     }
     return iterable(iterator)
@@ -29,7 +31,8 @@ export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
     return iterable(iterator)
 }
 
-export function flatMap<T, I>(input: Iterable<I>, func: (v: I) => Iterable<T>): Iterable<T> {
+export function flatMap<T, I>(input: Iterable<I>, func: (v: I, i: number) => Iterable<T>)
+    : Iterable<T> {
     return flatten(map(input, func))
 }
 
