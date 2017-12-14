@@ -70,7 +70,7 @@ describe("generate", () => {
 
 describe("reduce", () => {
     it("no items", () => {
-        const result = _.reduce([], (a, b) => a)
+        const result = _.reduce([], a => a)
         chai.assert.isUndefined(result)
     })
     it("1", () => {
