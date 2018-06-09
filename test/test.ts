@@ -19,7 +19,7 @@ describe("filter", () => {
 describe("filterMap", () => {
     it("array", () => {
         const result = Array.from(_.filterMap([1, 2, 3, 4], x => x))
-        assert.deepEqual([2, 4], result)
+        assert.deepEqual([1, 2, 3, 4], result)
     })
 })
 
@@ -138,5 +138,29 @@ describe("toObject", () => {
     it("toObject", () => {
         const result = _.toObject([["a", 2], ["b", 4]])
         assert.deepEqual({ a: 2, b: 4 }, result)
+    })
+})
+
+describe("arrayEqual", () => {
+    it("ref equal", () => {
+        const ref = ["a", "b"]
+        const result = _.arrayEqual(ref, ref, (a, b) => a === b)
+        assert.isTrue(result)
+    })
+    it("equal", () => {
+        const result = _.arrayEqual(["a", "b"], ["a", "b"], (a, b) => a === b)
+        assert.isTrue(result)
+    })
+    it("undefined", () => {
+        const result = _.arrayEqual(["a", "b"], undefined, (a, b) => a === b)
+        assert.isFalse(result)
+    })
+    it("length", () => {
+        const result = _.arrayEqual(["a", "b"], ["a", "b", "c"], (a, b) => a === b)
+        assert.isFalse(result)
+    })
+    it("not equal", () => {
+        const result = _.arrayEqual(["a", "b"], ["a", "c"], (a, b) => a === b)
+        assert.isFalse(result)
     })
 })

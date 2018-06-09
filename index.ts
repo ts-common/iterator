@@ -161,3 +161,25 @@ export function toObject<T>(input: Iterable<[string, T]>): ObjectAsMap<T> {
     }
     return result
 }
+
+export function arrayEqual<T>(
+    a: T[]|undefined, b: T[]|undefined, e: (ai: T, bi: T) => boolean): boolean {
+
+    if (a === b) {
+        return true
+    }
+    if (a === undefined || b === undefined) {
+        return false
+    }
+    const al = a.length
+    const bl = b.length
+    if (al !== bl) {
+        return false
+    }
+    for (let i = 0; i < al; ++i) {
+        if (!e(a[i], b[i])) {
+            return false
+        }
+    }
+    return true
+}

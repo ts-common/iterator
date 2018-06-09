@@ -3,6 +3,9 @@
   "version": "0.0.14",
   "description": "Iterator library for JavaScript and TypeScript",
   "main": "index.js",
+  "nyc": {
+    "reporter": ["lcov", "text"]
+  },
   "scripts": {
     "tsc": "tsc",
     "tslint": "tslint --project tsconfig.json",
