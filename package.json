@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
+    "tslint": "tslint --project tsconfig.json",
     "prepack": "npm install && tsc",
     "test": "tsc && istanbul cover node_modules/mocha/bin/_mocha && istanbul check-coverage"
   },
@@ -30,6 +31,7 @@
     "chai": "^4.1.2",
     "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
+    "tslint": "^5.10.0",
     "typescript": "^2.9.1"
   },
   "dependencies": {}

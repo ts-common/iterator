@@ -1,6 +1,6 @@
 export function iterable<T>(createIterator: () => Iterator<T>): Iterable<T> {
     class Implementation implements Iterable<T> {
-        [Symbol.iterator]() {
+        public [Symbol.iterator]() {
             return createIterator()
         }
     }
@@ -44,16 +44,16 @@ export function entries<T>(input: ObjectAsMap<T>): Iterable<[string, T]> {
     return map(Object.getOwnPropertyNames(input), name => nameValue(name, input[name]))
 }
 
-export function nameValue<T>(name: string, value: T) : [string, T] {
+export function nameValue<T>(name: string, value: T): [string, T] {
     return [name, value]
 }
 
-export function getName<T>(nameValue: [string, T]): string {
-    return nameValue[0]
+export function getName<T>(nv: [string, T]): string {
+    return nv[0]
 }
 
-export function getValue<T>(nameValue: [string, T]): T {
-    return nameValue[1]
+export function getValue<T>(nv: [string, T]): T {
+    return nv[1]
 }
 
 export function generate<T>(func: (i: number) => T, count?: number): Iterable<T> {
@@ -70,15 +70,14 @@ export function repeat<T>(v: T, count?: number): Iterable<T> {
     return generate(_ => v, count)
 }
 
-export function groupBy<T>(input: Iterable<[string, T]>, reduce: (a: T, b: T) => T)
-    : ObjectAsMap<T>
-{
-    const result : { [key: string]: T } = {}
+export function groupBy<T>(input: Iterable<[string, T]>, reduceFunc: (a: T, b: T) => T)
+    : ObjectAsMap<T> {
+    const result: { [key: string]: T } = {}
     for (const nv of input) {
         const n = getName(nv)
         const v = getValue(nv)
         const prior = result[n]
-        result[n] = prior === undefined ? v : reduce(prior, v)
+        result[n] = prior === undefined ? v : reduceFunc(prior, v)
     }
     return result
 }
@@ -105,7 +104,7 @@ export function max(input: Iterable<number>): number {
     return reduce(input, Math.max, -Infinity)
 }
 
-export function zip<T>(...inputs: Iterable<T>[]): Iterable<T[]> {
+export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<T[]> {
     function *iterator() {
         const iterators = inputs.map(i => i[Symbol.iterator]())
         while (true) {

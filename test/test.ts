@@ -13,7 +13,7 @@ describe("map", () => {
 
 describe("flatten", () => {
     it("array", () => {
-        const result = Array.from(_.flatten([[1, 2], [2, 3], [3,4]]))
+        const result = Array.from(_.flatten([[1, 2], [2, 3], [3, 4]]))
         result.should.deep.equal([1, 2, 2, 3, 3, 4])
     })
 })
@@ -28,21 +28,21 @@ describe("flatMap", () => {
 describe("groupBy", () => {
     it("array", () => {
         const m = _.map([1, 2, 3, 1, 3, 2, 3, 3], x => _.nameValue(x.toString(), 1))
-        const result = _.groupBy(m, (a, b) => a + b, )
-        result.should.deep.equal({ "1": 2, "2": 2, "3": 4 })
+        const result = _.groupBy(m, (a, b) => a + b)
+        result.should.deep.equal({ 1: 2, 2: 2, 3: 4 })
     })
 })
 
 describe("values", () => {
     it("array", () => {
-        const result = Array.from(_.values({ "1": 2, "2": 2, "3": 3 }))
+        const result = Array.from(_.values({ 1: 2, 2: 2, 3: 3 }))
         result.should.deep.equal([2, 2, 3])
     })
 })
 
 describe("entries", () => {
     it("array", () => {
-        const result = Array.from(_.entries({ "1": 2, "2": 2, "3": 3 }))
+        const result = Array.from(_.entries({ 1: 2, 2: 2, 3: 3 }))
         result.should.deep.equal([["1", 2], ["2", 2], ["3", 3]])
     })
 })
@@ -76,7 +76,7 @@ describe("reduce", () => {
     it("1", () => {
         const result = _.reduce([1], (a, b) => a + b)
         if (result === undefined) {
-            throw "undefined"
+            throw new Error("undefined")
         }
         result.should.equal(1)
     })
