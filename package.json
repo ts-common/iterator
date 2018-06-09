@@ -1,16 +1,16 @@
 {
-  "name": "iterator-lib",
-  "version": "0.0.13",
+  "name": "@ts-common/iterator-lib",
+  "version": "0.0.14",
   "description": "Iterator library for JavaScript and TypeScript",
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "prepare": "npm test",
+    "prepack": "tsc",
     "test": "tsc && istanbul cover node_modules/mocha/bin/_mocha && istanbul check-coverage"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sergey-shandar/iterator-lib.git"
+    "url": "git+https://github.com/ts-common/iterator-lib.git"
   },
   "keywords": [
     "iterator"
@@ -21,16 +21,16 @@
   "author": "Sergey Shandar",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/sergey-shandar/iterator-lib/issues"
+    "url": "https://github.com/ts-common/iterator-lib/issues"
   },
-  "homepage": "https://github.com/sergey-shandar/iterator-lib#readme",
+  "homepage": "https://github.com/ts-common/iterator-lib#readme",
   "devDependencies": {
     "@types/chai": "^4.0.8",
     "@types/mocha": "^2.2.44",
     "chai": "^4.1.2",
     "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
-    "typescript": "^2.6.2"
+    "typescript": "^2.9.1"
   },
   "dependencies": {}
 }
