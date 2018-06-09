@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "prepack": "tsc",
+    "prepack": "npm install && tsc",
     "test": "tsc && istanbul cover node_modules/mocha/bin/_mocha && istanbul check-coverage"
   },
   "repository": {
