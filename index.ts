@@ -22,6 +22,31 @@ export function map<T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Ite
     return iterable(iterator)
 }
 
+export function filterMap<T, I>(input: Iterable<I>, func: (v: I, i: number) => T|undefined): Iterable<T> {
+    function *iterator() {
+        let i = 0
+        for (const v of input) {
+            const result = func(v, i)
+            if (result !== undefined) {
+                yield result
+            }
+            ++i
+        }
+    }
+    return iterable(iterator)
+}
+
+export function filter<T>(input: Iterable<T>, func: (v: T) => boolean): Iterable<T> {
+    function *iterator() {
+        for (const v of input) {
+            if (func(v)) {
+                yield v
+            }
+        }
+    }
+    return iterable(iterator)
+}
+
 export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
     function *iterator() {
         for (const v of input) {
@@ -36,12 +61,17 @@ export function flatMap<T, I>(input: Iterable<I>, func: (v: I, i: number) => Ite
     return flatten(map(input, func))
 }
 
-export function values<T>(input: ObjectAsMap<T>): Iterable<T> {
-    return map(Object.getOwnPropertyNames(input), name => input[name])
+export function values<T>(input: ObjectAsMap<T|undefined>): Iterable<T> {
+    return filterMap(Object.getOwnPropertyNames(input), name => input[name])
 }
 
-export function entries<T>(input: ObjectAsMap<T>): Iterable<[string, T]> {
-    return map(Object.getOwnPropertyNames(input), name => nameValue(name, input[name]))
+export function entries<T>(input: ObjectAsMap<T|undefined>): Iterable<[string, T]> {
+    return filterMap(
+        Object.getOwnPropertyNames(input),
+        name => {
+            const v = input[name]
+            return v !== undefined ? nameValue(name, v) : undefined
+        })
 }
 
 export function nameValue<T>(name: string, value: T): [string, T] {

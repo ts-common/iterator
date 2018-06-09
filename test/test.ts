@@ -9,6 +9,20 @@ describe("map", () => {
     })
 })
 
+describe("filter", () => {
+    it("array", () => {
+        const result = Array.from(_.filter([1, 2, 3, 4], x => x % 2 === 0))
+        assert.deepEqual([2, 4], result)
+    })
+})
+
+describe("filterMap", () => {
+    it("array", () => {
+        const result = Array.from(_.filterMap([1, 2, 3, 4], x => x))
+        assert.deepEqual([2, 4], result)
+    })
+})
+
 describe("flatten", () => {
     it("array", () => {
         const result = Array.from(_.flatten([[1, 2], [2, 3], [3, 4]]))
@@ -36,12 +50,23 @@ describe("values", () => {
         const result = Array.from(_.values({ 1: 2, 2: 2, 3: 3 }))
         assert.deepEqual([2, 2, 3], result)
     })
+    it("array with undefined", () => {
+        const x: { [name: string]: number|undefined } = { 1: 2, 2: 4, t: undefined }
+        const result: number[] = Array.from(_.values(x))
+        assert.deepEqual([2, 4], result)
+    })
 })
 
 describe("entries", () => {
     it("array", () => {
-        const result = Array.from(_.entries({ 1: 2, 2: 2, 3: 3 }))
+        const x: { [name: string]: number } = { 1: 2, 2: 2, 3: 3 }
+        const result = Array.from(_.entries(x))
         assert.deepEqual([["1", 2], ["2", 2], ["3", 3]], result)
+    })
+    it("array with undefined", () => {
+        const x: { [name: string]: number|undefined } = { 1: 2, 2: 2, t: undefined }
+        const result = Array.from(_.entries(x))
+        assert.deepEqual([["1", 2], ["2", 2]], result)
     })
 })
 
