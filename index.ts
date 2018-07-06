@@ -1,11 +1,11 @@
 export function iterable<T>(createIterator: () => Iterator<T>): Iterable<T> {
     return {
-        [Symbol.iterator]() { return createIterator() },
+        [Symbol.iterator](): Iterator<T> { return createIterator() },
     }
 }
 
 export function map<T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Iterable<T> {
-    function *iterator() {
+    function *iterator(): Iterator<T> {
         let i = 0
         for (const v of input) {
             yield func(v, i)
@@ -16,7 +16,7 @@ export function map<T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Ite
 }
 
 export function filterMap<T, I>(input: Iterable<I>, func: (v: I, i: number) => T|undefined): Iterable<T> {
-    function *iterator() {
+    function *iterator(): Iterator<T> {
         let i = 0
         for (const v of input) {
             const result = func(v, i)
@@ -30,7 +30,7 @@ export function filterMap<T, I>(input: Iterable<I>, func: (v: I, i: number) => T
 }
 
 export function filter<T>(input: Iterable<T>, func: (v: T) => boolean): Iterable<T> {
-    function *iterator() {
+    function *iterator(): Iterator<T> {
         for (const v of input) {
             if (func(v)) {
                 yield v
@@ -41,7 +41,7 @@ export function filter<T>(input: Iterable<T>, func: (v: T) => boolean): Iterable
 }
 
 export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
-    function *iterator() {
+    function *iterator(): Iterator<T> {
         for (const v of input) {
             yield *v
         }
@@ -58,7 +58,7 @@ export function flatMap<T, I>(
 
 export function generate<T>(func: (i: number) => T, count?: number): Iterable<T> {
     const f: (i: number) => boolean = count === undefined ? () => true : i => i < count
-    function *iterator() {
+    function *iterator(): Iterator<T> {
         for (let i = 0; f(i); ++i) {
             yield func(i)
         }
@@ -92,8 +92,9 @@ export function max(input: Iterable<number>): number {
     return reduce(input, Math.max, -Infinity)
 }
 
+/* tslint:disable-next-line:readonly-array */
 export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<ReadonlyArray<T>> {
-    function *iterator() {
+    function *iterator(): Iterator<ReadonlyArray<T>> {
         const iterators = inputs.map(i => i[Symbol.iterator]())
         while (true) {
             const result = new Array<T>(inputs.length)
@@ -113,8 +114,8 @@ export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<ReadonlyArray<T>
 }
 
 export function arrayEqual<T>(
-    a: T[]|undefined,
-    b: T[]|undefined,
+    a: ReadonlyArray<T>|undefined,
+    b: ReadonlyArray<T>|undefined,
     e: (ai: T, bi: T) => boolean,
 ): boolean {
 
