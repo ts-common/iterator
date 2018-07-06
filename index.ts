@@ -82,9 +82,7 @@ export function reduce<T>(input: Iterable<T>, func: (a: T, b: T) => T, init: T):
 export function reduce<T>(input: Iterable<T>, func: (a: T, b: T) => T): T|undefined
 
 export function reduce<T>(input: Iterable<T>, func: (a: T, b: T) => T, init?: T): T|undefined {
-    for (const v of input) {
-        init = init === undefined ? v : func(init, v)
-    }
+    forEach(input, v => init = init === undefined ? v : func(init, v))
     return init
 }
 

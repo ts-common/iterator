@@ -28,10 +28,10 @@
         // Functional style rules
         "no-this": true,
         "no-class": true,
-        "no-mixed-interface": true
+        "no-mixed-interface": true,
         // "no-expression-statement": true,
-        // "no-if-statement": true
-
+        // "no-if-statement": true,
+        // "no-loop-statement": true
     },
     "rulesDirectory": []
 }
