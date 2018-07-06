@@ -1,6 +1,6 @@
 {
-  "name": "@ts-common/iterator-lib",
-  "version": "0.0.15",
+  "name": "@ts-common/iterator",
+  "version": "0.0.16",
   "description": "Iterator library for JavaScript and TypeScript",
   "main": "index.js",
   "nyc": {
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ts-common/iterator-lib.git"
+    "url": "git+https://github.com/ts-common/iterator.git"
   },
   "keywords": [
     "iterator"
@@ -28,9 +28,9 @@
   "author": "Sergey Shandar",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/ts-common/iterator-lib/issues"
+    "url": "https://github.com/ts-common/iterator/issues"
   },
-  "homepage": "https://github.com/ts-common/iterator-lib#readme",
+  "homepage": "https://github.com/ts-common/iterator#readme",
   "devDependencies": {
     "@types/chai": "^4.1.3",
     "@types/mocha": "^5.2.1",
