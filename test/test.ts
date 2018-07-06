@@ -107,7 +107,7 @@ describe("max", () => {
 
 describe("arrayEqual", () => {
     it("ref equal", () => {
-        const ref = ["a", "b"]
+        const ref: ReadonlyArray<string> = ["a", "b"]
         const result = _.arrayEqual(ref, ref, (a, b) => a === b)
         assert.isTrue(result)
     })
