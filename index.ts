@@ -7,7 +7,7 @@ export function iterable<T>(createIterator: () => Iterator<T>): Iterable<T> {
     return new Implementation()
 }
 
-export interface ObjectAsMap<T> {
+export interface StringMap<T> {
     readonly [key: string]: T;
 }
 
@@ -56,25 +56,34 @@ export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
     return iterable(iterator)
 }
 
-export function flatMap<T, I>(input: Iterable<I>, func: (v: I, i: number) => Iterable<T>)
-    : Iterable<T> {
+export function flatMap<T, I>(
+    input: Iterable<I>,
+    func: (v: I, i: number) => Iterable<T>,
+): Iterable<T> {
     return flatten(map(input, func))
 }
 
-export function values<T>(input: ObjectAsMap<T|undefined>): Iterable<T> {
-    return filterMap(Object.getOwnPropertyNames(input), name => input[name])
+export function entries<T>(input: StringMap<T|undefined>): Iterable<[string, T]> {
+    function *iterator() {
+        for (const name in input) {
+            const value = input[name]
+            if (value !== undefined) {
+                yield entry(name, value)
+            }
+        }
+    }
+    return iterable(iterator)
 }
 
-export function entries<T>(input: ObjectAsMap<T|undefined>): Iterable<[string, T]> {
-    return filterMap(
-        Object.getOwnPropertyNames(input),
-        name => {
-            const v = input[name]
-            return v !== undefined ? nameValue(name, v) : undefined
-        })
+export function names<T>(input: StringMap<T>): Iterable<string> {
+    return map(entries(input), getName)
 }
 
-export function nameValue<T>(name: string, value: T): [string, T] {
+export function values<T>(input: StringMap<T|undefined>): Iterable<T> {
+    return map(entries(input), getValue)
+}
+
+export function entry<T>(name: string, value: T): [string, T] {
     return [name, value]
 }
 
@@ -100,8 +109,10 @@ export function repeat<T>(v: T, count?: number): Iterable<T> {
     return generate(_ => v, count)
 }
 
-export function groupBy<T>(input: Iterable<[string, T]>, reduceFunc: (a: T, b: T) => T)
-    : ObjectAsMap<T> {
+export function groupBy<T>(
+    input: Iterable<[string, T]>,
+    reduceFunc: (a: T, b: T) => T,
+): StringMap<T> {
     const result: { [key: string]: T } = {}
     for (const nv of input) {
         const n = getName(nv)
@@ -154,7 +165,7 @@ export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<T[]> {
     return iterable(iterator)
 }
 
-export function toObject<T>(input: Iterable<[string, T]>): ObjectAsMap<T> {
+export function stringMap<T>(input: Iterable<[string, T]>): StringMap<T> {
     const result: { [name: string]: T } = {}
     for (const nv of input) {
         result[getName(nv)] = getValue(nv)
@@ -163,7 +174,10 @@ export function toObject<T>(input: Iterable<[string, T]>): ObjectAsMap<T> {
 }
 
 export function arrayEqual<T>(
-    a: T[]|undefined, b: T[]|undefined, e: (ai: T, bi: T) => boolean): boolean {
+    a: T[]|undefined,
+    b: T[]|undefined,
+    e: (ai: T, bi: T) => boolean,
+): boolean {
 
     if (a === b) {
         return true
