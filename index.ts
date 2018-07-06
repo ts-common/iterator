@@ -4,10 +4,6 @@ export function iterable<T>(createIterator: () => Iterator<T>): Iterable<T> {
     }
 }
 
-export interface StringMap<T> {
-    readonly [key: string]: T;
-}
-
 export function map<T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Iterable<T> {
     function *iterator() {
         let i = 0
@@ -60,38 +56,6 @@ export function flatMap<T, I>(
     return flatten(map(input, func))
 }
 
-export function entries<T>(input: StringMap<T|undefined>): Iterable<[string, T]> {
-    function *iterator() {
-        for (const name in input) {
-            const value = input[name]
-            if (value !== undefined) {
-                yield entry(name, value)
-            }
-        }
-    }
-    return iterable(iterator)
-}
-
-export function names<T>(input: StringMap<T>): Iterable<string> {
-    return map(entries(input), getName)
-}
-
-export function values<T>(input: StringMap<T|undefined>): Iterable<T> {
-    return map(entries(input), getValue)
-}
-
-export function entry<T>(name: string, value: T): [string, T] {
-    return [name, value]
-}
-
-export function getName<T>(nv: [string, T]): string {
-    return nv[0]
-}
-
-export function getValue<T>(nv: [string, T]): T {
-    return nv[1]
-}
-
 export function generate<T>(func: (i: number) => T, count?: number): Iterable<T> {
     const f: (i: number) => boolean = count === undefined ? () => true : i => i < count
     function *iterator() {
@@ -104,20 +68,6 @@ export function generate<T>(func: (i: number) => T, count?: number): Iterable<T>
 
 export function repeat<T>(v: T, count?: number): Iterable<T> {
     return generate(_ => v, count)
-}
-
-export function groupBy<T>(
-    input: Iterable<[string, T]>,
-    reduceFunc: (a: T, b: T) => T,
-): StringMap<T> {
-    const result: { [key: string]: T } = {}
-    for (const nv of input) {
-        const n = getName(nv)
-        const v = getValue(nv)
-        const prior = result[n]
-        result[n] = prior === undefined ? v : reduceFunc(prior, v)
-    }
-    return result
 }
 
 export function reduce<T>(input: Iterable<T>, func: (a: T, b: T) => T, init: T): T
@@ -142,7 +92,7 @@ export function max(input: Iterable<number>): number {
     return reduce(input, Math.max, -Infinity)
 }
 
-export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<T[]> {
+export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<ReadonlyArray<T>> {
     function *iterator() {
         const iterators = inputs.map(i => i[Symbol.iterator]())
         while (true) {
@@ -160,14 +110,6 @@ export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<T[]> {
         }
     }
     return iterable(iterator)
-}
-
-export function stringMap<T>(input: Iterable<[string, T]>): StringMap<T> {
-    const result: { [name: string]: T } = {}
-    for (const nv of input) {
-        result[getName(nv)] = getValue(nv)
-    }
-    return result
 }
 
 export function arrayEqual<T>(
