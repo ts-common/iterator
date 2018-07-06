@@ -105,6 +105,21 @@ describe("max", () => {
     })
 })
 
+describe("forEach", () => {
+    it("array", () => {
+        let x = 0
+        let ii = 0
+        _.forEach(
+            [1, 2, 4],
+            (v, i) => {
+                x = x + v
+                ii = ii + i
+            })
+        assert.equal(7, x)
+        assert.equal(3, ii)
+    })
+})
+
 describe("arrayEqual", () => {
     it("ref equal", () => {
         const ref: ReadonlyArray<string> = ["a", "b"]

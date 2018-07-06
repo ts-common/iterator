@@ -15,6 +15,14 @@ export function map<T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Ite
     return iterable(iterator)
 }
 
+export function forEach<T>(input: Iterable<T>, func: (v: T, i: number) => void): void {
+    let i = 0
+    for (const v of input) {
+        func(v, i)
+        ++i
+    }
+}
+
 export function filterMap<T, I>(input: Iterable<I>, func: (v: I, i: number) => T|undefined): Iterable<T> {
     function *iterator(): Iterator<T> {
         let i = 0
