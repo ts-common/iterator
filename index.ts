@@ -1,10 +1,7 @@
 export function iterable<T>(createIterator: () => Iterator<T>): Iterable<T> {
-    class Implementation implements Iterable<T> {
-        public [Symbol.iterator]() {
-            return createIterator()
-        }
+    return {
+        [Symbol.iterator]() { return createIterator() },
     }
-    return new Implementation()
 }
 
 export interface StringMap<T> {
