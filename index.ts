@@ -64,41 +64,41 @@ export function repeat<T>(v: T, count?: number): Iterable<T> {
     return generate(() => v, count)
 }
 
-export function forEach<T>(input: Iterable<T>, func: (v: T, i: number) => void): void {
-    let i = 0
-    /* tslint:disable-next-line:no-loop-statement */
-    for (const v of input) {
-        /* tslint:disable-next-line:no-expression-statement */
-        func(v, i)
-        /* tslint:disable-next-line:no-expression-statement */
-        ++i
-    }
+export function fold<T, A>(input: Iterable<T>, func: (a: A, b: T, i: number) => A, init: A): A {
+     let result = init
+     let i = 0
+     /* tslint:disable-next-line:no-loop-statement */
+     for (const v of input) {
+         /* tslint:disable-next-line:no-expression-statement */
+         result = func(result, v, i)
+         /* tslint:disable-next-line:no-expression-statement */
+         ++i
+     }
+     return result
 }
 
-export function reduce<T>(input: Iterable<T>, func: (a: T, b: T, i: number) => T, init: T): T
-export function reduce<T>(input: Iterable<T>, func: (a: T, b: T, i: number) => T): T|undefined
+export function reduce<T>(input: Iterable<T>, func: (a: T, b: T, i: number) => T): T|undefined {
+    return fold<T, T|undefined>(
+        input,
+        (a, b, i) => a !== undefined ? func(a, b, i) : b,
+        undefined)
+}
 
-export function reduce<T>(
-    input: Iterable<T>,
-    func: (a: T, b: T, i: number) => T,
-    init?: T,
-): T|undefined {
-    let result = init
+export function forEach<T>(input: Iterable<T>, func: (v: T, i: number) => void): void {
     /* tslint:disable-next-line:no-expression-statement */
-    forEach(input, (v, i) => result = result === undefined ? v : func(result, v, i))
-    return result
+    fold<T, void>(input, (_, v, i) => { func(v, i) }, undefined)
 }
 
 export function sum(input: Iterable<number>): number {
-    return reduce(input, (a, b) => a + b, 0)
+    return fold(input, (a, b) => a + b, 0)
 }
 
 export function min(input: Iterable<number>): number {
-    return reduce(input, (a, b) => Math.min(a, b), Infinity)
+    return fold(input, (a, b) => Math.min(a, b), Infinity)
 }
 
 export function max(input: Iterable<number>): number {
-    return reduce(input, (a, b) => Math.max(a, b), -Infinity)
+    return fold(input, (a, b) => Math.max(a, b), -Infinity)
 }
 
 /* tslint:disable-next-line:readonly-array */

@@ -1,6 +1,6 @@
 {
   "name": "@ts-common/iterator",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Iterator library for JavaScript and TypeScript",
   "main": "index.js",
   "nyc": {

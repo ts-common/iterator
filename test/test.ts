@@ -1,3 +1,5 @@
+/* tslint:disable */
+
 import * as _ from "../index"
 import "mocha";
 import { assert } from "chai"
@@ -73,6 +75,13 @@ describe("reduce", () => {
             throw new Error("undefined")
         }
         assert.equal(1, result)
+    })
+    it("2", () => {
+        const result = _.reduce([1, 2], (a, b) => a + b)
+        if (result === undefined) {
+            throw new Error("undefined")
+        }
+        assert.equal(3, result)
     })
 })
 
