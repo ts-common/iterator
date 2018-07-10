@@ -10,12 +10,15 @@ export function flatMap<T, I>(
 ): Iterable<T> {
     function *iterator(): Iterator<T> {
         let i = 0
+        /* tslint:disable-next-line:no-loop-statement */
         for (const v of input) {
             const result = func(v, i)
+            /* tslint:disable-next-line:no-if-statement */
             if (result === undefined) {
                 return
             }
             yield *result
+            /* tslint:disable-next-line:no-expression-statement */
             ++i
         }
     }
@@ -47,6 +50,7 @@ export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
 
 function infinite(): Iterable<void> {
     function *iterator(): Iterator<void> {
+        /* tslint:disable-next-line:no-loop-statement */
         while (true) { yield }
     }
     return iterable(iterator)
@@ -62,8 +66,11 @@ export function repeat<T>(v: T, count?: number): Iterable<T> {
 
 export function forEach<T>(input: Iterable<T>, func: (v: T, i: number) => void): void {
     let i = 0
+    /* tslint:disable-next-line:no-loop-statement */
     for (const v of input) {
+        /* tslint:disable-next-line:no-expression-statement */
         func(v, i)
+        /* tslint:disable-next-line:no-expression-statement */
         ++i
     }
 }
@@ -76,8 +83,10 @@ export function reduce<T>(
     func: (a: T, b: T, i: number) => T,
     init?: T,
 ): T|undefined {
-    forEach(input, (v, i) => init = init === undefined ? v : func(init, v, i))
-    return init
+    let result = init
+    /* tslint:disable-next-line:no-expression-statement */
+    forEach(input, (v, i) => result = result === undefined ? v : func(result, v, i))
+    return result
 }
 
 export function sum(input: Iterable<number>): number {
@@ -96,15 +105,20 @@ export function max(input: Iterable<number>): number {
 export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<ReadonlyArray<T>> {
     function *iterator(): Iterator<ReadonlyArray<T>> {
         const iterators = inputs.map(i => i[Symbol.iterator]())
+        /* tslint:disable-next-line:no-loop-statement */
         while (true) {
             const result = new Array<T>(inputs.length)
             let i = 0;
+            /* tslint:disable-next-line:no-loop-statement */
             for (const it of iterators) {
                 const v = it.next()
+                /* tslint:disable-next-line:no-if-statement */
                 if (v.done) {
                     return
                 }
+                /* tslint:disable-next-line:no-object-mutation no-expression-statement */
                 result[i] = v.value
+                /* tslint:disable-next-line:no-expression-statement */
                 ++i
             }
             yield result
@@ -119,18 +133,23 @@ export function arrayEqual<T>(
     e: (ai: T, bi: T) => boolean,
 ): boolean {
 
+    /* tslint:disable-next-line:no-if-statement */
     if (a === b) {
         return true
     }
+    /* tslint:disable-next-line:no-if-statement */
     if (a === undefined || b === undefined) {
         return false
     }
     const al = a.length
     const bl = b.length
+    /* tslint:disable-next-line:no-if-statement */
     if (al !== bl) {
         return false
     }
+    /* tslint:disable-next-line:no-loop-statement */
     for (let i = 0; i < al; ++i) {
+        /* tslint:disable-next-line:no-if-statement */
         if (!e(a[i], b[i])) {
             return false
         }
