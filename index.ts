@@ -132,7 +132,6 @@ export function arrayEqual<T>(
     b: ReadonlyArray<T>|undefined,
     e: (ai: T, bi: T) => boolean,
 ): boolean {
-
     /* tslint:disable-next-line:no-if-statement */
     if (a === b) {
         return true
