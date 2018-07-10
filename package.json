@@ -1,6 +1,6 @@
 {
   "name": "@ts-common/iterator",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Iterator library for JavaScript and TypeScript",
   "main": "index.js",
   "nyc": {
@@ -13,7 +13,7 @@
     "tsc": "tsc",
     "tslint": "tslint --project tsconfig.json",
     "prepack": "npm install && tsc",
-    "test": "tsc && nyc mocha"
+    "test": "tsc && npm run tslint && nyc mocha"
   },
   "repository": {
     "type": "git",
