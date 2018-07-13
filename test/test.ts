@@ -24,7 +24,7 @@ describe("filterMap", () => {
         assert.deepEqual([1, 2, 3, 4], result)
     })
     it("array with undefined", () => {
-        const result = Array.from(_.filterMap([1, 2, 3, 4, undefined], x => x))
+        const result: number[] = Array.from(_.filterMap([1, 2, 3, 4, undefined], x => x))
         assert.deepEqual([1, 2, 3, 4], result)
     })
 })
@@ -101,6 +101,10 @@ describe("min", () => {
         const result = _.min([])
         assert.equal(Infinity, result)
     })
+    it("negative", () => {
+        const result = _.min([-1, -2, -3])
+        assert.equal(-3, result)
+    })
 })
 
 describe("max", () => {
@@ -111,6 +115,10 @@ describe("max", () => {
     it("0", () => {
         const result = _.max([])
         assert.equal(-Infinity, result)
+    })
+    it("negative (to make sure, no zeros are involved", () => {
+        const result = _.max([-2, -3, -4])
+        assert.equal(-2, result)
     })
 })
 

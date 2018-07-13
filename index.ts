@@ -66,7 +66,10 @@ export function optionalToArray<T>(v: T|undefined): ReadonlyArray<T> {
     return v === undefined ? [] : [v]
 }
 
-export function filterMap<T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Iterable<T> {
+export function filterMap<T, I>(
+    input: Iterable<I>,
+    func: (v: I, i: number) => T|undefined,
+): Iterable<T> {
     return flatMap(input, (v, i) => optionalToArray(func(v, i)))
 }
 
@@ -153,8 +156,6 @@ export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<ReadonlyArray<T>
         /* tslint:disable-next-line:no-loop-statement */
         while (true) {
             const result = new Array<T>(inputs.length)
-            // const itResults = map(iterators, it => it.next())
-            // itResults
             /* tslint:disable-next-line:no-loop-statement */
             for (const [index, it] of entries(iterators)) {
                 const v = it.next()
