@@ -1,51 +1,77 @@
+import { Tuple2, tuple2 } from "@ts-common/tuple"
+
 export function iterable<T>(createIterator: () => Iterator<T>): Iterable<T> {
-    return {
-        [Symbol.iterator](): Iterator<T> { return createIterator() },
-    }
+    return { [Symbol.iterator]: createIterator }
 }
 
-export function flatMap<T, I>(
-    input: Iterable<I>,
-    func: (v: I, i: number) => Iterable<T>|undefined,
-): Iterable<T> {
-    function *iterator(): Iterator<T> {
-        let i = 0
+export type Entry<T> = Tuple2<number, T>
+
+export const entry: <T>(key: number, value: T) => Entry<T> = tuple2
+
+export function entries<T>(input: Iterable<T>): Iterable<Entry<T>> {
+    function *iterator(): Iterator<Entry<T>> {
+        let index = 0
         /* tslint:disable-next-line:no-loop-statement */
-        for (const v of input) {
-            const result = func(v, i)
-            /* tslint:disable-next-line:no-if-statement */
-            if (result === undefined) {
-                return
-            }
-            yield *result
+        for (const value of input) {
+            yield entry(index, value)
             /* tslint:disable-next-line:no-expression-statement */
-            ++i
+            ++index
         }
     }
     return iterable(iterator)
 }
 
 export function map<T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Iterable<T> {
-    return flatMap(input, (v, i) => [func(v, i)])
+    function *iterator(): Iterator<T> {
+        /* tslint:disable-next-line:no-loop-statement */
+        for (const [index, value] of entries(input)) {
+            yield func(value, index)
+        }
+    }
+    return iterable(iterator)
+}
+
+export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
+    function *iterator(): Iterator<T> {
+        /* tslint:disable-next-line:no-loop-statement */
+        for (const v of input) {
+            yield *v
+        }
+    }
+    return iterable(iterator)
+}
+
+export function takeWhile<T>(input: Iterable<T>, func: (v: T, i: number) => boolean): Iterable<T> {
+    function *iterator(): Iterator<T> {
+        /* tslint:disable-next-line:no-loop-statement */
+        for (const [index, value] of entries(input)) {
+            /* tslint:disable-next-line:no-if-statement */
+            if (!func(value, index)) {
+                return
+            }
+            yield value
+        }
+    }
+    return iterable(iterator)
+}
+
+export function flatMap<T, I>(
+    input: Iterable<I>,
+    func: (v: I, i: number) => Iterable<T>,
+): Iterable<T> {
+    return flatten(map(input, func))
 }
 
 export function optionalToArray<T>(v: T|undefined): ReadonlyArray<T> {
     return v === undefined ? [] : [v]
 }
 
-export function filterMap<T, I>(
-    input: Iterable<I>,
-    func: (v: I, i: number) => T|undefined,
-): Iterable<T> {
+export function filterMap<T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Iterable<T> {
     return flatMap(input, (v, i) => optionalToArray(func(v, i)))
 }
 
 export function filter<T>(input: Iterable<T>, func: (v: T, i: number) => boolean): Iterable<T> {
     return flatMap(input, (v, i) => func(v, i) ? [v] : [])
-}
-
-export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
-    return flatMap(input, v => v)
 }
 
 function infinite(): Iterable<void> {
@@ -57,24 +83,43 @@ function infinite(): Iterable<void> {
 }
 
 export function generate<T>(func: (i: number) => T, count?: number): Iterable<T> {
-    return flatMap(infinite(), (_, i) => i === count ? undefined : [func(i)])
+    return map(takeWhile(infinite(), (_, i) => i !== count), (_, i) => func(i))
 }
 
 export function repeat<T>(v: T, count?: number): Iterable<T> {
     return generate(() => v, count)
 }
 
+export function lazyFold<T, A>(
+    input: Iterable<T>,
+    func: (a: A, b: T, i: number) => A,
+    init: A,
+): Iterable<A> {
+    function *iterator(): Iterator<A> {
+        let result = init
+        /* tslint:disable-next-line:no-loop-statement */
+        for (const [index, value] of entries(input)) {
+            /* tslint:disable-next-line:no-expression-statement */
+            result = func(result, value, index)
+            yield result
+        }
+    }
+    return iterable(iterator)
+}
+
+export function last<T>(input: Iterable<T>): T|undefined {
+    let result: T|undefined
+    /* tslint:disable-next-line:no-loop-statement */
+    for (const v of input) {
+        /* tslint:disable-next-line:no-expression-statement */
+        result = v
+    }
+    return result
+}
+
 export function fold<T, A>(input: Iterable<T>, func: (a: A, b: T, i: number) => A, init: A): A {
-     let result = init
-     let i = 0
-     /* tslint:disable-next-line:no-loop-statement */
-     for (const v of input) {
-         /* tslint:disable-next-line:no-expression-statement */
-         result = func(result, v, i)
-         /* tslint:disable-next-line:no-expression-statement */
-         ++i
-     }
-     return result
+    const result = last(lazyFold(input, func, init))
+    return result !== undefined ? result : init
 }
 
 export function reduce<T>(input: Iterable<T>, func: (a: T, b: T, i: number) => T): T|undefined {
@@ -108,18 +153,17 @@ export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<ReadonlyArray<T>
         /* tslint:disable-next-line:no-loop-statement */
         while (true) {
             const result = new Array<T>(inputs.length)
-            let i = 0;
+            // const itResults = map(iterators, it => it.next())
+            // itResults
             /* tslint:disable-next-line:no-loop-statement */
-            for (const it of iterators) {
+            for (const [index, it] of entries(iterators)) {
                 const v = it.next()
                 /* tslint:disable-next-line:no-if-statement */
                 if (v.done) {
                     return
                 }
                 /* tslint:disable-next-line:no-object-mutation no-expression-statement */
-                result[i] = v.value
-                /* tslint:disable-next-line:no-expression-statement */
-                ++i
+                result[index] = v.value
             }
             yield result
         }
