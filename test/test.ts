@@ -160,3 +160,14 @@ describe("arrayEqual", () => {
         assert.isFalse(result)
     })
 })
+
+describe("last", () => {
+    it("3", () => {
+        const result = _.last([1, 4, 5, 3])
+        assert.equal(3, result)
+    })
+    it("undefined", () => {
+        const result = _.last([])
+        assert.isUndefined(result)
+    })
+})

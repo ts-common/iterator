@@ -93,36 +93,14 @@ export function repeat<T>(v: T, count?: number): Iterable<T> {
     return generate(() => v, count)
 }
 
-export function lazyFold<T, A>(
-    input: Iterable<T>,
-    func: (a: A, b: T, i: number) => A,
-    init: A,
-): Iterable<A> {
-    function *iterator(): Iterator<A> {
-        let result = init
-        /* tslint:disable-next-line:no-loop-statement */
-        for (const [index, value] of entries(input)) {
-            /* tslint:disable-next-line:no-expression-statement */
-            result = func(result, value, index)
-            yield result
-        }
-    }
-    return iterable(iterator)
-}
-
-export function last<T>(input: Iterable<T>): T|undefined {
-    let result: T|undefined
+export function fold<T, A>(input: Iterable<T>, func: (a: A, b: T, i: number) => A, init: A): A {
+    let result: A = init
     /* tslint:disable-next-line:no-loop-statement */
-    for (const v of input) {
+    for (const [index, value] of entries(input)) {
         /* tslint:disable-next-line:no-expression-statement */
-        result = v
+        result = func(result, value, index)
     }
     return result
-}
-
-export function fold<T, A>(input: Iterable<T>, func: (a: A, b: T, i: number) => A, init: A): A {
-    const result = last(lazyFold(input, func, init))
-    return result !== undefined ? result : init
 }
 
 export function reduce<T>(input: Iterable<T>, func: (a: T, b: T, i: number) => T): T|undefined {
@@ -130,6 +108,10 @@ export function reduce<T>(input: Iterable<T>, func: (a: T, b: T, i: number) => T
         input,
         (a, b, i) => a !== undefined ? func(a, b, i) : b,
         undefined)
+}
+
+export function last<T>(input: Iterable<T>): T|undefined {
+    return reduce(input, (_, v) => v)
 }
 
 export function forEach<T>(input: Iterable<T>, func: (v: T, i: number) => void): void {
