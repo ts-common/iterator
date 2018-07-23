@@ -171,3 +171,14 @@ describe("last", () => {
         assert.isUndefined(result)
     })
 })
+
+describe("some", () => {
+    it("some", () => {
+        const result = _.some([1, 2, 3, 4], v => v == 2)
+        assert.isTrue(result)
+    })
+    it("none", () => {
+        const result = _.some([1, 5, 3, 4], v => v == 2)
+        assert.isFalse(result)
+    })
+})

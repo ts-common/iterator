@@ -114,6 +114,17 @@ export function last<T>(input: Iterable<T>): T|undefined {
     return reduce(input, (_, v) => v)
 }
 
+export function some<T>(input: Iterable<T>, func: (v: T, i: number) => boolean): boolean {
+    // tslint:disable-next-line:no-loop-statement
+    for (const [index, value] of entries(input)) {
+        // tslint:disable-next-line:no-if-statement
+        if (func(value, index)) {
+            return true
+        }
+    }
+    return false
+}
+
 export function forEach<T>(input: Iterable<T>, func: (v: T, i: number) => void): void {
     /* tslint:disable-next-line:no-expression-statement */
     fold<T, void>(input, (_, v, i) => { func(v, i) }, undefined)
