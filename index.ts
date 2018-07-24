@@ -201,3 +201,5 @@ export function arrayEqual<T>(
 export function isArray<T, U>(v: ReadonlyArray<T>|U): v is ReadonlyArray<T> {
     return v instanceof Array
 }
+
+export const toArray: <T>(i: Iterable<T>) => ReadonlyArray<T> = Array.from
