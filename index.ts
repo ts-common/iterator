@@ -197,3 +197,7 @@ export function arrayEqual<T>(
     }
     return true
 }
+
+export function isArray<T, U>(v: ReadonlyArray<T>|U): v is ReadonlyArray<T> {
+    return v instanceof Array
+}

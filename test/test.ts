@@ -182,3 +182,28 @@ describe("some", () => {
         assert.isFalse(result)
     })
 })
+
+function readonlyArrayOrString(v: ReadonlyArray<string>|string): ReadonlyArray<string>|string {
+    return v
+}
+
+describe("isArray", () => {
+    it("array", () => {
+        const v = readonlyArrayOrString(["5"])
+        if (_.isArray(v)) {
+            assert.equal(1, v.length)
+            assert.equal("5", v[0])
+        } else {
+            throw Error("`isArray()` returned `false`")
+        }
+    })
+    it("array", () => {
+        const v = readonlyArrayOrString("5")
+        if (_.isArray(v)) {
+            throw Error("`isArray()` returned `true`")
+
+        } else {
+            assert.equal("5", v)
+        }
+    })
+})
