@@ -207,3 +207,10 @@ describe("isArray", () => {
         }
     })
 })
+
+describe("concat", () => {
+    it("several", () => {
+        const result = _.concat([1, 2, 3], [5, 7, 9], [-1])
+        assert.deepEqual([1, 2, 3, 5, 7, 9, -1], _.toArray(result))
+    })
+})

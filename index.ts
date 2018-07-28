@@ -203,3 +203,14 @@ export function isArray<T, U>(v: ReadonlyArray<T>|U): v is ReadonlyArray<T> {
 }
 
 export const toArray: <T>(i: Iterable<T>) => ReadonlyArray<T> = Array.from
+
+// tslint:disable-next-line:readonly-array
+export function concat<T>(...a: Array<Iterable<T>>): Iterable<T> {
+    function *iterator() {
+        // tslint:disable-next-line:no-loop-statement
+        for (const i of a) {
+            yield *i
+        }
+    }
+    return iterable(iterator)
+}
