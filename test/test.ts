@@ -137,26 +137,26 @@ describe("forEach", () => {
     })
 })
 
-describe("arrayEqual", () => {
+describe("isEqual", () => {
     it("ref equal", () => {
         const ref: ReadonlyArray<string> = ["a", "b"]
-        const result = _.arrayEqual(ref, ref, (a, b) => a === b)
+        const result = _.isEqual(ref, ref, (a, b) => a === b)
         assert.isTrue(result)
     })
     it("equal", () => {
-        const result = _.arrayEqual(["a", "b"], ["a", "b"], (a, b) => a === b)
+        const result = _.isEqual(["a", "b"], ["a", "b"], (a, b) => a === b)
         assert.isTrue(result)
     })
-    it("undefined", () => {
-        const result = _.arrayEqual(["a", "b"], undefined, (a, b) => a === b)
-        assert.isFalse(result)
-    })
     it("length", () => {
-        const result = _.arrayEqual(["a", "b"], ["a", "b", "c"], (a, b) => a === b)
+        const result = _.isEqual(["a", "b"], ["a", "b", "c"], (a, b) => a === b)
         assert.isFalse(result)
     })
     it("not equal", () => {
-        const result = _.arrayEqual(["a", "b"], ["a", "c"], (a, b) => a === b)
+        const result = _.isEqual(["a", "b"], ["a", "c"], (a, b) => a === b)
+        assert.isFalse(result)
+    })
+    it("default e", () => {
+        const result = _.isEqual(["a", "b"], ["a", "c"])
         assert.isFalse(result)
     })
 })
@@ -212,5 +212,16 @@ describe("concat", () => {
     it("several", () => {
         const result = _.concat([1, 2, 3], [5, 7, 9], [-1])
         assert.deepEqual([1, 2, 3, 5, 7, 9, -1], _.toArray(result))
+    })
+})
+
+describe("every", () => {
+    it("all", () => {
+        const result = _.every([1, 2, 3], v => v > 0)
+        assert.isTrue(result)
+    })
+    it("not all", () => {
+        const result = _.every([1, 2, 0], v => v > 0)
+        assert.isFalse(result)
     })
 })

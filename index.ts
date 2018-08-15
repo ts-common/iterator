@@ -1,14 +1,13 @@
 import { Tuple2, tuple2 } from "@ts-common/tuple"
 
-export function iterable<T>(createIterator: () => Iterator<T>): Iterable<T> {
-    return { [Symbol.iterator]: createIterator }
-}
+export const iterable = <T>(createIterator: () => Iterator<T>): Iterable<T> =>
+    ({ [Symbol.iterator]: createIterator })
 
 export type Entry<T> = Tuple2<number, T>
 
 export const entry: <T>(key: number, value: T) => Entry<T> = tuple2
 
-export function entries<T>(input: Iterable<T>): Iterable<Entry<T>> {
+export const entries = <T>(input: Iterable<T>): Iterable<Entry<T>> => {
     function *iterator(): Iterator<Entry<T>> {
         let index = 0
         /* tslint:disable-next-line:no-loop-statement */
@@ -21,7 +20,7 @@ export function entries<T>(input: Iterable<T>): Iterable<Entry<T>> {
     return iterable(iterator)
 }
 
-export function map<T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Iterable<T> {
+export const map = <T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Iterable<T> => {
     function *iterator(): Iterator<T> {
         /* tslint:disable-next-line:no-loop-statement */
         for (const [index, value] of entries(input)) {
@@ -31,7 +30,7 @@ export function map<T, I>(input: Iterable<I>, func: (v: I, i: number) => T): Ite
     return iterable(iterator)
 }
 
-export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
+export const flatten = <T>(input: Iterable<Iterable<T>>): Iterable<T> => {
     function *iterator(): Iterator<T> {
         /* tslint:disable-next-line:no-loop-statement */
         for (const v of input) {
@@ -42,11 +41,13 @@ export function flatten<T>(input: Iterable<Iterable<T>>): Iterable<T> {
 }
 
 // tslint:disable-next-line:readonly-array
-export function concat<T>(...input: Array<Iterable<T>>): Iterable<T> {
-    return flatten(input)
-}
+export const concat = <T>(...input: Array<Iterable<T>>): Iterable<T> =>
+    flatten(input)
 
-export function takeWhile<T>(input: Iterable<T>, func: (v: T, i: number) => boolean): Iterable<T> {
+export const takeWhile = <T>(
+    input: Iterable<T>,
+    func: (v: T, i: number) => boolean,
+): Iterable<T> => {
     function *iterator(): Iterator<T> {
         /* tslint:disable-next-line:no-loop-statement */
         for (const [index, value] of entries(input)) {
@@ -60,29 +61,25 @@ export function takeWhile<T>(input: Iterable<T>, func: (v: T, i: number) => bool
     return iterable(iterator)
 }
 
-export function flatMap<T, I>(
+export const flatMap = <T, I>(
     input: Iterable<I>,
     func: (v: I, i: number) => Iterable<T>,
-): Iterable<T> {
-    return flatten(map(input, func))
-}
+): Iterable<T> =>
+    flatten(map(input, func))
 
-export function optionalToArray<T>(v: T|undefined): ReadonlyArray<T> {
-    return v === undefined ? [] : [v]
-}
+export const optionalToArray = <T>(v: T|undefined): ReadonlyArray<T> =>
+    v === undefined ? [] : [v]
 
-export function filterMap<T, I>(
+export const filterMap = <T, I>(
     input: Iterable<I>,
     func: (v: I, i: number) => T|undefined,
-): Iterable<T> {
-    return flatMap(input, (v, i) => optionalToArray(func(v, i)))
-}
+): Iterable<T> =>
+    flatMap(input, (v, i) => optionalToArray(func(v, i)))
 
-export function filter<T>(input: Iterable<T>, func: (v: T, i: number) => boolean): Iterable<T> {
-    return flatMap(input, (v, i) => func(v, i) ? [v] : [])
-}
+export const filter = <T>(input: Iterable<T>, func: (v: T, i: number) => boolean): Iterable<T> =>
+    flatMap(input, (v, i) => func(v, i) ? [v] : [])
 
-function infinite(): Iterable<void> {
+const infinite = (): Iterable<void> => {
     function *iterator(): Iterator<void> {
         /* tslint:disable-next-line:no-loop-statement */
         while (true) { yield }
@@ -90,15 +87,13 @@ function infinite(): Iterable<void> {
     return iterable(iterator)
 }
 
-export function generate<T>(func: (i: number) => T, count?: number): Iterable<T> {
-    return map(takeWhile(infinite(), (_, i) => i !== count), (_, i) => func(i))
-}
+export const generate = <T>(func: (i: number) => T, count?: number): Iterable<T> =>
+    map(takeWhile(infinite(), (_, i) => i !== count), (_, i) => func(i))
 
-export function repeat<T>(v: T, count?: number): Iterable<T> {
-    return generate(() => v, count)
-}
+export const repeat = <T>(v: T, count?: number): Iterable<T> =>
+    generate(() => v, count)
 
-export function fold<T, A>(input: Iterable<T>, func: (a: A, b: T, i: number) => A, init: A): A {
+export const fold = <T, A>(input: Iterable<T>, func: (a: A, b: T, i: number) => A, init: A): A => {
     let result: A = init
     /* tslint:disable-next-line:no-loop-statement */
     for (const [index, value] of entries(input)) {
@@ -108,18 +103,16 @@ export function fold<T, A>(input: Iterable<T>, func: (a: A, b: T, i: number) => 
     return result
 }
 
-export function reduce<T>(input: Iterable<T>, func: (a: T, b: T, i: number) => T): T|undefined {
-    return fold<T, T|undefined>(
+export const reduce = <T>(input: Iterable<T>, func: (a: T, b: T, i: number) => T): T|undefined =>
+    fold<T, T|undefined>(
         input,
         (a, b, i) => a !== undefined ? func(a, b, i) : b,
         undefined)
-}
 
-export function last<T>(input: Iterable<T>): T|undefined {
-    return reduce(input, (_, v) => v)
-}
+export const last = <T>(input: Iterable<T>): T|undefined =>
+    reduce(input, (_, v) => v)
 
-export function find<T>(input: Iterable<T>, func: (v: T, i: number) => boolean): T|undefined {
+export const find = <T>(input: Iterable<T>, func: (v: T, i: number) => boolean): T|undefined => {
     // tslint:disable-next-line:no-loop-statement
     for (const [index, value] of entries(input)) {
         // tslint:disable-next-line:no-if-statement
@@ -130,29 +123,27 @@ export function find<T>(input: Iterable<T>, func: (v: T, i: number) => boolean):
     return undefined
 }
 
-export function some<T>(input: Iterable<T>, func: (v: T, i: number) => boolean): boolean {
-    return find(input, func) !== undefined
-}
+export const some = <T>(input: Iterable<T>, func: (v: T, i: number) => boolean): boolean =>
+    find(input, func) !== undefined
 
-export function forEach<T>(input: Iterable<T>, func: (v: T, i: number) => void): void {
+export const every = <T>(input: Iterable<T>, func: (v: T, i: number) => boolean): boolean =>
+    !some(input, (v, i) => !func(v, i))
+
+export const forEach = <T>(input: Iterable<T>, func: (v: T, i: number) => void): void =>
     /* tslint:disable-next-line:no-expression-statement */
     fold<T, void>(input, (_, v, i) => { func(v, i) }, undefined)
-}
 
-export function sum(input: Iterable<number>): number {
-    return fold(input, (a, b) => a + b, 0)
-}
+export const sum = (input: Iterable<number>): number =>
+    fold(input, (a, b) => a + b, 0)
 
-export function min(input: Iterable<number>): number {
-    return fold(input, (a, b) => Math.min(a, b), Infinity)
-}
+export const min = (input: Iterable<number>): number =>
+    fold(input, (a, b) => Math.min(a, b), Infinity)
 
-export function max(input: Iterable<number>): number {
-    return fold(input, (a, b) => Math.max(a, b), -Infinity)
-}
+export const max = (input: Iterable<number>): number =>
+    fold(input, (a, b) => Math.max(a, b), -Infinity)
 
 /* tslint:disable-next-line:readonly-array */
-export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<ReadonlyArray<T>> {
+export const zip = <T>(...inputs: Array<Iterable<T>>): Iterable<ReadonlyArray<T>> => {
     function *iterator(): Iterator<ReadonlyArray<T>> {
         const iterators = inputs.map(i => i[Symbol.iterator]())
         /* tslint:disable-next-line:no-loop-statement */
@@ -174,37 +165,45 @@ export function zip<T>(...inputs: Array<Iterable<T>>): Iterable<ReadonlyArray<T>
     return iterable(iterator)
 }
 
-export function arrayEqual<T>(
-    a: ReadonlyArray<T>|undefined,
-    b: ReadonlyArray<T>|undefined,
-    e: (ai: T, bi: T) => boolean,
-): boolean {
-    /* tslint:disable-next-line:no-if-statement */
-    if (a === b) {
+// TypeScript gives an error in case if type of a and type of b are different
+export const isStrictEqual = (a: unknown, b: unknown) => a === b
+
+export const isEqual = <A, B>(
+    a: Iterable<A>,
+    b: Iterable<B>,
+    e: (ai: A, bi: B) => boolean = isStrictEqual,
+): boolean => {
+    // tslint:disable-next-line:no-if-statement
+    if (isStrictEqual(a, b)) {
         return true
     }
-    /* tslint:disable-next-line:no-if-statement */
-    if (a === undefined || b === undefined) {
-        return false
-    }
-    const al = a.length
-    const bl = b.length
-    /* tslint:disable-next-line:no-if-statement */
-    if (al !== bl) {
-        return false
-    }
-    /* tslint:disable-next-line:no-loop-statement */
-    for (let i = 0; i < al; ++i) {
-        /* tslint:disable-next-line:no-if-statement */
-        if (!e(a[i], b[i])) {
+    const ai = a[Symbol.iterator]()
+    const bi = b[Symbol.iterator]()
+    // tslint:disable-next-line:no-loop-statement
+    while (true) {
+        const av = ai.next()
+        const bv = bi.next()
+        // tslint:disable-next-line:no-if-statement
+        if (av.done || bv.done) {
+            return av.done === bv.done
+        }
+        // tslint:disable-next-line:no-if-statement
+        if (!e(av.value, bv.value)) {
             return false
         }
     }
-    return true
 }
 
-export function isArray<T, U>(v: ReadonlyArray<T>|U): v is ReadonlyArray<T> {
-    return v instanceof Array
-}
+/*
+export const arrayEqual = <T>(
+    a: ReadonlyArray<T>|undefined,
+    b: ReadonlyArray<T>|undefined,
+    e: (ai: T, bi: T) => boolean = isStrictEqual,
+): boolean =>
+    a === undefined || b === undefined ? a === b : isEqual(a, b, e)
+    */
+
+export const isArray = <T, U>(v: ReadonlyArray<T>|U): v is ReadonlyArray<T> =>
+    v instanceof Array
 
 export const toArray: <T>(i: Iterable<T>) => ReadonlyArray<T> = Array.from
