@@ -194,15 +194,6 @@ export const isEqual = <A, B>(
     }
 }
 
-/*
-export const arrayEqual = <T>(
-    a: ReadonlyArray<T>|undefined,
-    b: ReadonlyArray<T>|undefined,
-    e: (ai: T, bi: T) => boolean = isStrictEqual,
-): boolean =>
-    a === undefined || b === undefined ? a === b : isEqual(a, b, e)
-    */
-
 export const isArray = <T, U>(v: ReadonlyArray<T>|U): v is ReadonlyArray<T> =>
     v instanceof Array
 
