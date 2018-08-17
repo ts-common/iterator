@@ -9,6 +9,10 @@ describe("map", () => {
         const result = Array.from(_.map([1, 2, 3], x => x * x))
         assert.deepEqual([1, 4, 9], result)
     })
+    it("undefined", () => {
+        const result = Array.from(_.map(undefined, x => x))
+        assert.deepEqual([], result)
+    })
 })
 
 describe("filter", () => {
@@ -34,6 +38,10 @@ describe("flatten", () => {
         const result = Array.from(_.flatten([[1, 2], [2, 3], [3, 4]]))
         assert.deepEqual([1, 2, 2, 3, 3, 4], result)
     })
+    it("undefined", () => {
+        const result = Array.from(_.flatten(undefined))
+        assert.deepEqual([], result)
+    })
 })
 
 describe("flatMap", () => {
@@ -52,8 +60,16 @@ describe("repeat", () => {
 
 describe("zip", () => {
     it("array", () => {
-        const result = Array.from(_.zip([1, "b"], ["a", 2]))
-        assert.deepEqual([[1, "a"], ["b", 2]], result)
+        const result = Array.from(_.zip([1, "b", 4], ["a", 2, 6]))
+        assert.deepEqual([[1, "a"], ["b", 2], [4, 6]], result)
+    })
+    it("empty item", () => {
+        const result = Array.from(_.zip([1, "b"], [], ["a", 2]))
+        assert.deepEqual([], result)
+    })
+    it("undefined", () => {
+        const result = Array.from(_.zip([1, "b"], undefined, ["a", 2]))
+        assert.deepEqual([], result)
     })
 })
 
@@ -159,6 +175,14 @@ describe("isEqual", () => {
         const result = _.isEqual(["a", "b"], ["a", "c"])
         assert.isFalse(result)
     })
+    it("one undefined", () => {
+        const result = _.isEqual(undefined, "a")
+        assert.isFalse(result)
+    })
+    it("both undefined", () => {
+        const result = _.isEqual(undefined, undefined)
+        assert.isTrue(result)
+    })
 })
 
 describe("last", () => {
@@ -212,6 +236,17 @@ describe("concat", () => {
     it("several", () => {
         const result = _.concat([1, 2, 3], [5, 7, 9], [-1])
         assert.deepEqual([1, 2, 3, 5, 7, 9, -1], _.toArray(result))
+    })
+    it("concat", () => {
+        const result = _.concat([1, 2, 3], [5, 7, 9], undefined, [-1])
+        assert.deepEqual([1, 2, 3, 5, 7, 9, -1], _.toArray(result))
+    })
+})
+
+describe("toArray", () => {
+    it("undefined", () => {
+        const result = _.toArray(undefined)
+        assert.deepEqual([], result)
     })
 })
 
