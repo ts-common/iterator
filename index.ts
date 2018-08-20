@@ -37,6 +37,9 @@ export const map = <T, I>(
     return iterable(iterator)
 }
 
+export const drop = <T>(input: Iterable<T>|undefined, n: number = 1): Iterable<T> =>
+    filter(input, (_, i) => n <= i)
+
 export const flatten = <T>(input: Iterable<Iterable<T>|undefined>|undefined): Iterable<T> => {
     function *iterator(): Iterator<T> {
         // tslint:disable-next-line:no-if-statement

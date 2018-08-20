@@ -22,6 +22,17 @@ describe("filter", () => {
     })
 })
 
+describe("drop", () => {
+    it("array", () => {
+        const result = Array.from(_.drop(["a", "b", "c", "d", "e"], 2))
+        assert.deepEqual(["c", "d", "e"], result)
+    })
+    it("default", () => {
+        const result = Array.from(_.drop(["a", "b", "c", "d", "e"]))
+        assert.deepEqual(["b", "c", "d", "e"], result)
+    })
+})
+
 describe("filterMap", () => {
     it("array", () => {
         const result = Array.from(_.filterMap([1, 2, 3, 4], x => x))
