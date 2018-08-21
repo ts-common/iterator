@@ -241,3 +241,6 @@ export const isArray = <T, U>(v: ReadonlyArray<T>|U): v is ReadonlyArray<T> =>
 
 export const toArray = <T>(i: Iterable<T>|undefined): ReadonlyArray<T> =>
     i === undefined ? [] : Array.from(i)
+
+export const reverse = <T>(i: Iterable<T>|undefined): ReadonlyArray<T> =>
+    fold(i, (a, b) => [b, ...a], new Array<T>())

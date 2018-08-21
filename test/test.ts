@@ -271,3 +271,10 @@ describe("every", () => {
         assert.isFalse(result)
     })
 })
+
+describe("reverse", () => {
+    it("array", () => {
+        const result = _.reverse([1, 2, 3])
+        assert.deepEqual([3, 2, 1], result)
+    })
+})

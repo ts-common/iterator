@@ -1,6 +1,6 @@
 {
   "name": "@ts-common/iterator",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "description": "Iterator library for JavaScript and TypeScript",
   "main": "index.js",
   "nyc": {
@@ -33,7 +33,7 @@
   "homepage": "https://github.com/ts-common/iterator#readme",
   "devDependencies": {
     "@types/chai": "^4.1.4",
-    "@types/mocha": "^5.2.4",
+    "@types/mocha": "^5.2.5",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "nyc": "^12.0.2",
