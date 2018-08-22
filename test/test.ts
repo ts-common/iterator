@@ -278,3 +278,19 @@ describe("reverse", () => {
         assert.deepEqual([3, 2, 1], result)
     })
 })
+
+describe("isEmpty", () => {
+    it("empty", () => {
+        const result = _.isEmpty(undefined)
+        assert.isTrue(result)
+    })
+    it("not empty", () => {
+        function *iterator() {
+            yield 23
+            // make sure we never check next item
+            assert.fail()
+        }
+        const result = _.isEmpty(iterator())
+        assert.isFalse(result)
+    })
+})

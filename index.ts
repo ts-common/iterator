@@ -244,3 +244,6 @@ export const toArray = <T>(i: Iterable<T>|undefined): ReadonlyArray<T> =>
 
 export const reverse = <T>(i: Iterable<T>|undefined): ReadonlyArray<T> =>
     fold(i, (a, b) => [b, ...a], new Array<T>())
+
+export const isEmpty = <T>(i: Iterable<T>|undefined): boolean =>
+    find(i, () => true) === undefined
