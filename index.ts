@@ -247,3 +247,8 @@ export const reverse = <T>(i: Iterable<T>|undefined): ReadonlyArray<T> =>
 
 export const isEmpty = <T>(i: Iterable<T>|undefined): boolean =>
     find(i, () => true) === undefined
+
+export const join = (i: Iterable<string>|undefined, separator: string): string => {
+    const result = reduce(i, (a, b) => a + separator + b)
+    return result === undefined ? "" : result
+}

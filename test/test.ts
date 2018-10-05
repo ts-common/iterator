@@ -294,3 +294,18 @@ describe("isEmpty", () => {
         assert.isFalse(result)
     })
 })
+
+describe("join", () => {
+    it("/", () => {
+        const result = _.join(["aaa", "bb", "c"], "/")
+        assert.strictEqual(result, "aaa/bb/c")
+    })
+    it("one", () => {
+        const result = _.join(["rrr"], "/")
+        assert.strictEqual(result, "rrr")
+    })
+    it("empty", () => {
+        const result = _.join([], "/")
+        assert.strictEqual(result, "")
+    })
+})
