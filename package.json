@@ -2,7 +2,7 @@
   "name": "@ts-common/iterator",
   "version": "0.0.37",
   "description": "Iterator library for JavaScript and TypeScript",
-  "main": "index.js",
+  "types": "index.d.ts",
   "nyc": {
     "reporter": [
       "lcov",
@@ -23,7 +23,11 @@
     "iterator"
   ],
   "files": [
-    "index.d.ts"
+    "index.js",
+    "index.d.ts",
+    "index.d.ts.map",
+    "index.js.map",
+    "index.ts"
   ],
   "author": "Sergey Shandar",
   "license": "Apache-2.0",
