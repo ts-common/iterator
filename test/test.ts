@@ -309,3 +309,25 @@ describe("join", () => {
         assert.strictEqual(result, "")
     })
 })
+
+describe("take", () => {
+    it("1", () => {
+        const result = _.toArray(_.take(["a", "b", "c"]))
+        assert.deepStrictEqual(result, ["a"])
+    })
+})
+
+describe("dropRight", () => {
+    it("array", () => {
+        const result = _.toArray(_.dropRight(["a", "b", "c", "d", "e"], 2))
+        assert.deepStrictEqual(result, ["a", "b", "c"])
+    })
+    it("1", () => {
+        const result = _.toArray(_.dropRight(["a", "b", "c", "d", "e"]))
+        assert.deepStrictEqual(result, ["a", "b", "c", "d"])
+    })
+    it("undefined", () => {
+        const result = _.dropRight(undefined)
+        assert.deepStrictEqual(result, [])
+    })
+})

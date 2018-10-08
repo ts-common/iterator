@@ -78,6 +78,23 @@ export const takeWhile = <T>(
     return iterable(iterator)
 }
 
+export const take = <T>(input: Iterable<T>|undefined, n: number = 1) =>
+    takeWhile(input, (_, i) => i < n)
+
+export const find = <T>(
+    input: Iterable<T>|undefined,
+    func: (v: T, i: number) => boolean,
+): T|undefined => {
+    // tslint:disable-next-line:no-loop-statement
+    for (const [index, value] of entries(input)) {
+        // tslint:disable-next-line:no-if-statement
+        if (func(value, index)) {
+            return value
+        }
+    }
+    return undefined
+}
+
 export const flatMap = <T, I>(
     input: Iterable<I>|undefined,
     func: (v: I, i: number) => Iterable<T>,
@@ -138,20 +155,6 @@ export const reduce = <T>(
 
 export const last = <T>(input: Iterable<T>|undefined): T|undefined =>
     reduce(input, (_, v) => v)
-
-export const find = <T>(
-    input: Iterable<T>|undefined,
-    func: (v: T, i: number) => boolean,
-): T|undefined => {
-    // tslint:disable-next-line:no-loop-statement
-    for (const [index, value] of entries(input)) {
-        // tslint:disable-next-line:no-if-statement
-        if (func(value, index)) {
-            return value
-        }
-    }
-    return undefined
-}
 
 export const some = <T>(
     input: Iterable<T>|undefined,
@@ -252,3 +255,6 @@ export const join = (i: Iterable<string>|undefined, separator: string): string =
     const result = reduce(i, (a, b) => a + separator + b)
     return result === undefined ? "" : result
 }
+
+export const dropRight = <T>(i: ReadonlyArray<T>|undefined, n: number = 1): Iterable<T> =>
+    i === undefined ? [] : take(i, i.length - n)
