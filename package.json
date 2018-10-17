@@ -1,19 +1,23 @@
 {
   "name": "@ts-common/iterator",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "description": "Iterator library for JavaScript and TypeScript",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "nyc": {
     "reporter": [
       "lcov",
       "text"
+    ],
+    "include": [
+      "dist/*.js"
     ]
   },
   "scripts": {
     "tsc": "tsc",
     "tslint": "tslint --project tsconfig.json",
     "prepack": "npm install && tsc",
-    "test": "tsc && npm run tslint && nyc mocha"
+    "test": "tsc && npm run tslint && nyc mocha ./dist/test/*.js"
   },
   "repository": {
     "type": "git",
@@ -23,11 +27,11 @@
     "iterator"
   ],
   "files": [
-    "index.js",
-    "index.d.ts",
-    "index.d.ts.map",
-    "index.js.map",
-    "index.ts"
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/index.js.map",
+    "src/index.ts"
   ],
   "author": "Sergey Shandar",
   "license": "Apache-2.0",
@@ -40,10 +44,10 @@
     "@types/mocha": "^5.2.5",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "nyc": "^13.0.1",
+    "nyc": "^13.1.0",
     "tslint": "^5.11.0",
     "tslint-immutable": "^4.8.0",
-    "typescript": "^3.1.1"
+    "typescript": "^3.1.3"
   },
   "dependencies": {
     "@ts-common/tuple": "0.0.0"
