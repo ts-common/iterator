@@ -1,6 +1,6 @@
 # iterator
 
-[![npm version](https://badge.fury.io/js/%40ts-common%2Fiterator.svg)](https://badge.fury.io/js/%40ts-common%2Fiterator) [![Build Status](https://travis-ci.org/ts-common/iterator.svg?branch=master)](https://travis-ci.org/ts-common/iterator)
+[![npm version](https://badge.fury.io/js/%40ts-common%2Fiterator.svg)](https://badge.fury.io/js/%40ts-common%2Fiterator) [![Build Status](https://travis-ci.org/ts-common/iterator.svg?branch=master)](https://travis-ci.org/ts-common/iterator) [![Build Status](https://dev.azure.com/ts-common/ts-common/_apis/build/status/ts-common.iterator)](https://dev.azure.com/ts-common/ts-common/_build/latest?definitionId=1)
 
 Iterator library for TypeScript and JavaScript
 
