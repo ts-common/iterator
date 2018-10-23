@@ -23,7 +23,6 @@ describe("filter", () => {
     })
 })
 
-/*
 describe("drop", () => {
     it("array", () => {
         const result = Array.from(_.drop(["a", "b", "c", "d", "e"], 2))
@@ -34,7 +33,6 @@ describe("drop", () => {
         assert.deepEqual(["b", "c", "d", "e"], result)
     })
 })
-*/
 
 describe("filterMap", () => {
     it("array", () => {
