@@ -9,7 +9,6 @@ pool:
 steps:
 - script: npm install
 - script: npm test
-- script: npm publish --dry-run
 
 - task: PublishTestResults@2
   inputs:
