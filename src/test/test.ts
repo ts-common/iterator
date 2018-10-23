@@ -15,7 +15,6 @@ describe("map", () => {
     })
 })
 
-
 describe("filter", () => {
     it("array", () => {
         const result = Array.from(_.filter([1, 2, 3, 4], x => x % 2 === 0))
