@@ -7,7 +7,9 @@
   "nyc": {
     "reporter": [
       "lcov",
-      "text"
+      "text",
+      "cobertura",
+      "html"
     ],
     "include": [
       "dist/*.js"
