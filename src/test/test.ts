@@ -15,6 +15,7 @@ describe("map", () => {
     })
 })
 
+
 describe("filter", () => {
     it("array", () => {
         const result = Array.from(_.filter([1, 2, 3, 4], x => x % 2 === 0))
@@ -22,6 +23,7 @@ describe("filter", () => {
     })
 })
 
+/*
 describe("drop", () => {
     it("array", () => {
         const result = Array.from(_.drop(["a", "b", "c", "d", "e"], 2))
@@ -32,6 +34,7 @@ describe("drop", () => {
         assert.deepEqual(["b", "c", "d", "e"], result)
     })
 })
+*/
 
 describe("filterMap", () => {
     it("array", () => {
