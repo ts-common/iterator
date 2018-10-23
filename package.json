@@ -6,7 +6,6 @@
   "types": "dist/index.d.ts",
   "nyc": {
     "reporter": [
-      "lcov",
       "text",
       "cobertura",
       "html"
