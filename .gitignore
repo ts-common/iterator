@@ -60,3 +60,6 @@ typings/
 *.js
 *.d.ts
 *.map
+dist/
+
+test-results.xml
