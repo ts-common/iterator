@@ -1,5 +1,5 @@
 import { Tuple2, tuple2 } from "@ts-common/tuple"
-
+fddsd
 export const iterable = <T>(createIterator: () => Iterator<T>): Iterable<T> =>
     ({ [Symbol.iterator]: createIterator })
 
