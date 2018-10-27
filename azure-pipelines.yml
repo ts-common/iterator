@@ -7,7 +7,13 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 steps:
-- script: npm pack
+
+- task: Npm@1
+  displayName: 'npm pack'
+  inputs:
+    command: custom
+    verbose: false
+    customCommand: pack
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: drop'
