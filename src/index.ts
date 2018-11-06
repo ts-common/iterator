@@ -154,7 +154,8 @@ export const reduce = <T>(
     fold<T, T|undefined>(
         input,
         (a, b, i) => a !== undefined ? func(a, b, i) : b,
-        undefined)
+        undefined,
+    )
 
 export const last = <T>(input: Iterable<T>|undefined): T|undefined =>
     reduce(input, (_, v) => v)
