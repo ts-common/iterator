@@ -216,6 +216,10 @@ describe("some", () => {
         const result = _.some([1, 5, 3, 4], v => v == 2)
         assert.isFalse(result)
     })
+    it("with undefined", () => {
+        const result = _.some([undefined], () => true)
+        assert.isTrue(result)
+    })
 })
 
 function readonlyArrayOrString(v: ReadonlyArray<string>|string): ReadonlyArray<string>|string {
@@ -292,6 +296,25 @@ describe("isEmpty", () => {
         }
         const result = _.isEmpty(iterator())
         assert.isFalse(result)
+    })
+    it("with undefined", () => {
+        const result = _.isEmpty([undefined])
+        assert.isFalse(result)
+    })
+})
+
+describe("find", () => {
+    it("some", () => {
+        const result = _.find([0, 1, 0], v => v === 0)
+        assert.deepEqual(result, 0)
+    })
+    it("none", () => {
+        const result = _.find([0, 1, 0], v => v === 2)
+        assert.deepEqual(result, undefined)
+    })
+    it("undefined", () => {
+        const result = _.find([undefined], () => true)
+        assert.deepEqual(result, undefined)
     })
 })
 

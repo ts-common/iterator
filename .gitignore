@@ -63,3 +63,4 @@ typings/
 dist/
 
 test-results.xml
+package-lock.json
