@@ -20,6 +20,9 @@ export type Entry<T> = Tuple2<number, T>
 
 export const entry: <T>(key: number, value: T) => Entry<T> = tuple2
 
+const ENTRY_KEY = 0
+const ENTRY_VALUE = 1
+
 export const entries = <T>(input: Iterable<T>|undefined): Iterable<Entry<T>> =>
     iterable(function *(): Iterator<Entry<T>> {
         // tslint:disable-next-line:no-if-statement
@@ -86,18 +89,26 @@ export const takeWhile = <T>(
 export const take = <T>(input: Iterable<T>|undefined, n: number = 1) =>
     takeWhile(input, (_, i) => i < n)
 
+export const findEntry =  <T>(
+    input: Iterable<T>|undefined,
+    func: (v: T, i: number) => boolean,
+): Entry<T>|undefined => {
+    // tslint:disable-next-line:no-loop-statement
+    for (const e of entries(input)) {
+        // tslint:disable-next-line:no-if-statement
+        if (func(e[ENTRY_VALUE], e[ENTRY_KEY])) {
+            return e
+        }
+    }
+    return undefined
+}
+
 export const find = <T>(
     input: Iterable<T>|undefined,
     func: (v: T, i: number) => boolean,
 ): T|undefined => {
-    // tslint:disable-next-line:no-loop-statement
-    for (const [index, value] of entries(input)) {
-        // tslint:disable-next-line:no-if-statement
-        if (func(value, index)) {
-            return value
-        }
-    }
-    return undefined
+    const e = findEntry(input, func)
+    return e === undefined ? undefined : e[ENTRY_VALUE]
 }
 
 export const flatMap = <T, I>(
@@ -164,7 +175,7 @@ export const some = <T>(
     input: Iterable<T>|undefined,
     func: (v: T, i: number) => boolean,
 ): boolean =>
-    find(input, func) !== undefined
+    findEntry(input, func) !== undefined
 
 export const every = <T>(
     input: Iterable<T>|undefined,
@@ -251,7 +262,7 @@ export const reverse = <T>(i: Iterable<T>|undefined): ReadonlyArray<T> =>
     fold(i, (a, b) => [b, ...a], new Array<T>())
 
 export const isEmpty = <T>(i: Iterable<T>|undefined): boolean =>
-    find(i, () => true) === undefined
+    !some(i, () => true)
 
 export const join = (i: Iterable<string>|undefined, separator: string): string => {
     const result = reduce(i, (a, b) => a + separator + b)
