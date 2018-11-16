@@ -303,6 +303,21 @@ describe("isEmpty", () => {
     })
 })
 
+describe("findEntry", () => {
+    it("some", () => {
+        const result = _.findEntry([0, 1, 0], v => v === 0)
+        assert.deepEqual(result, [0, 0])
+    })
+    it("none", () => {
+        const result = _.find([0, 1, 0], v => v === 2)
+        assert.deepEqual(result, undefined)
+    })
+    it("undefined", () => {
+        const result = _.findEntry([undefined], () => true)
+        assert.deepEqual(result, [0, undefined])
+    })
+})
+
 describe("find", () => {
     it("some", () => {
         const result = _.find([0, 1, 0], v => v === 0)
