@@ -369,3 +369,21 @@ describe("dropRight", () => {
         assert.deepStrictEqual(result, [])
     })
 })
+
+describe("uniq", () => {
+    it("sorted", () => {
+        const result = _.toArray(_.uniq([1, 2, 2, 3]))
+        assert.deepStrictEqual(result, [1, 2, 3])
+    })
+    it("unsorted", () => {
+        const result = _.toArray(_.uniq([3, 1, 2, 2, 3]))
+        assert.deepStrictEqual(result, [3, 1, 2])
+    })
+    it("complex", () => {
+        const result = _.toArray(_.uniq(
+            [{ a: 3 },  { a: 1 },  { a: 2 }, { a: 2 }, { a: 3 }],
+            v => v.a
+        ))
+        assert.deepStrictEqual(result, [{ a: 3 }, { a: 1 }, { a: 2 }])
+    })
+})
