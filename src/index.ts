@@ -271,3 +271,18 @@ export const join = (i: Iterable<string>|undefined, separator: string): string =
 
 export const dropRight = <T>(i: ReadonlyArray<T>|undefined, n: number = 1): Iterable<T> =>
     i === undefined ? [] : take(i, i.length - n)
+
+export const uniq = <T>(i: Iterable<T>, key: (v: T) => unknown = v => v): Iterable<T> =>
+    iterable(function *() {
+        const set = new Set<unknown>()
+        // tslint:disable-next-line:no-loop-statement
+        for (const v of i) {
+            const k = key(v)
+            // tslint:disable-next-line:no-if-statement
+            if (!set.has(k)) {
+                // tslint:disable-next-line:no-expression-statement
+                set.add(k)
+                yield v
+            }
+        }
+    })
