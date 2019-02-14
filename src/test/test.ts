@@ -2,7 +2,7 @@
 
 import * as _ from "../index"
 import "mocha";
-import { assert } from "chai"
+import * as assert from "assert"
 
 describe("map", () => {
     it("array", () => {
@@ -13,11 +13,19 @@ describe("map", () => {
         const result = Array.from(_.map(undefined, x => x))
         assert.deepEqual([], result)
     })
+    it("member", () => {
+        const result = Array.from(_.iterable(() => [1, 2, 3][Symbol.iterator]()).map(x => x * x))
+        assert.deepEqual([1, 4, 9], result)
+    })
 })
 
 describe("filter", () => {
     it("array", () => {
         const result = Array.from(_.filter([1, 2, 3, 4], x => x % 2 === 0))
+        assert.deepEqual([2, 4], result)
+    })
+    it("member", () => {
+        const result = Array.from(_.iterable(function *() { yield *[1, 2, 3, 4] }).filter(x => x % 2 === 0))
         assert.deepEqual([2, 4], result)
     })
 })
@@ -31,6 +39,10 @@ describe("drop", () => {
         const result = Array.from(_.drop(["a", "b", "c", "d", "e"]))
         assert.deepEqual(["b", "c", "d", "e"], result)
     })
+    it("member", () => {
+        const result = Array.from(_.iterable(function *() { yield *["a", "b", "c", "d", "e"] }).drop(2))
+        assert.deepEqual(["c", "d", "e"], result)
+    })
 })
 
 describe("filterMap", () => {
@@ -41,6 +53,10 @@ describe("filterMap", () => {
     it("array with undefined", () => {
         const result: number[] = Array.from(_.filterMap([1, 2, 3, 4, undefined], x => x))
         assert.deepEqual([1, 2, 3, 4], result)
+    })
+    it("member", () => {
+        const result = Array.from(_.concat([1, 2, 3, 4]).filterMap(x => x < 3 ? x * 2 : undefined))
+        assert.deepEqual([2, 4], result)
     })
 })
 
@@ -58,6 +74,10 @@ describe("flatten", () => {
 describe("flatMap", () => {
     it("array", () => {
         const result = Array.from(_.flatMap([1, 2, 3], x => [x, x * 2]))
+        assert.deepEqual([1, 2, 2, 4, 3, 6], result)
+    })
+    it("member", () => {
+        const result = Array.from(_.iterable(() => [1, 2, 3][Symbol.iterator]()).flatMap(x => [x, x * 2]))
         assert.deepEqual([1, 2, 2, 4, 3, 6], result)
     })
 })
@@ -82,6 +102,10 @@ describe("zip", () => {
         const result = Array.from(_.zip([1, "b"], undefined, ["a", 2]))
         assert.deepEqual([], result)
     })
+    it("member", () => {
+        const result = Array.from(_.concat([1, "b", 4]).zip(["a", 2, 6]))
+        assert.deepEqual([[1, "a"], ["b", 2], [4, 6]], result)
+    })
 })
 
 describe("generate", () => {
@@ -94,7 +118,7 @@ describe("generate", () => {
 describe("reduce", () => {
     it("no items", () => {
         const result = _.reduce([], a => a)
-        assert.isUndefined(result)
+        assert.strictEqual(result, undefined)
     })
     it("1", () => {
         const result = _.reduce([1], (a, b) => a + b)
@@ -109,6 +133,13 @@ describe("reduce", () => {
             throw new Error("undefined")
         }
         assert.equal(3, result)
+    })
+    it("member", () => {
+        const result = _.concat([1, 2, 3]).reduce((a, b) => a + b)
+        if (result === undefined) {
+            throw new Error("undefined")
+        }
+        assert.equal(6, result)
     })
 })
 
@@ -131,6 +162,13 @@ describe("min", () => {
     it("negative", () => {
         const result = _.min([-1, -2, -3])
         assert.equal(-3, result)
+    })
+})
+
+describe("fold", () => {
+    it("member", () => {
+        const result = _.concat([1, 2, 3]).fold((a, b) => a + b, "")
+        assert.equal(result, "123")
     })
 })
 
@@ -162,37 +200,52 @@ describe("forEach", () => {
         assert.equal(7, x)
         assert.equal(3, ii)
     })
+    it("member", () => {
+        let x = 0
+        let ii = 0
+        _.concat([1, 2, 4]).forEach(
+            (v, i) => {
+                x = x + v
+                ii = ii + i
+            })
+        assert.equal(7, x)
+        assert.equal(3, ii)
+    })
 })
 
 describe("isEqual", () => {
     it("ref equal", () => {
         const ref: ReadonlyArray<string> = ["a", "b"]
         const result = _.isEqual(ref, ref, (a, b) => a === b)
-        assert.isTrue(result)
+        assert.strictEqual(result, true)
     })
     it("equal", () => {
         const result = _.isEqual(["a", "b"], ["a", "b"], (a, b) => a === b)
-        assert.isTrue(result)
+        assert.strictEqual(result, true)
     })
     it("length", () => {
         const result = _.isEqual(["a", "b"], ["a", "b", "c"], (a, b) => a === b)
-        assert.isFalse(result)
+        assert.strictEqual(result, false)
     })
     it("not equal", () => {
         const result = _.isEqual(["a", "b"], ["a", "c"], (a, b) => a === b)
-        assert.isFalse(result)
+        assert.strictEqual(result, false)
     })
     it("default e", () => {
         const result = _.isEqual(["a", "b"], ["a", "c"])
-        assert.isFalse(result)
+        assert.strictEqual(result, false)
     })
     it("one undefined", () => {
         const result = _.isEqual(undefined, "a")
-        assert.isFalse(result)
+        assert.strictEqual(result, false)
     })
     it("both undefined", () => {
         const result = _.isEqual(undefined, undefined)
-        assert.isTrue(result)
+        assert.strictEqual(result, true)
+    })
+    it("member", () => {
+        const result = _.concat(["a", "b"]).isEqual(["a", "c"])
+        assert.strictEqual(result, false)
     })
 })
 
@@ -203,22 +256,30 @@ describe("last", () => {
     })
     it("undefined", () => {
         const result = _.last([])
-        assert.isUndefined(result)
+        assert.strictEqual(result, undefined)
+    })
+    it("member", () => {
+        const result = _.concat([1, 4, 5, 3, 9]).last()
+        assert.equal(9, result)
     })
 })
 
 describe("some", () => {
     it("some", () => {
         const result = _.some([1, 2, 3, 4], v => v == 2)
-        assert.isTrue(result)
+        assert.strictEqual(result, true)
     })
     it("none", () => {
         const result = _.some([1, 5, 3, 4], v => v == 2)
-        assert.isFalse(result)
+        assert.strictEqual(result, false)
     })
     it("with undefined", () => {
         const result = _.some([undefined], () => true)
-        assert.isTrue(result)
+        assert.strictEqual(result, true)
+    })
+    it("member", () => {
+        const result = _.concat([1, 2, 3, 4]).some(v => v == 4)
+        assert.strictEqual(result, true)
     })
 })
 
@@ -256,6 +317,10 @@ describe("concat", () => {
         const result = _.concat([1, 2, 3], [5, 7, 9], undefined, [-1])
         assert.deepEqual([1, 2, 3, 5, 7, 9, -1], _.toArray(result))
     })
+    it("member", () => {
+        const result = _.concat([91, 140]).concat([1, 2, 3], [5, 7, 9], undefined, [-1])
+        assert.deepEqual([91, 140, 1, 2, 3, 5, 7, 9, -1], _.toArray(result))
+    })
 })
 
 describe("toArray", () => {
@@ -263,16 +328,24 @@ describe("toArray", () => {
         const result = _.toArray(undefined)
         assert.deepEqual([], result)
     })
+    it("member", () => {
+        const result = _.concat([1, 2, 3]).toArray()
+        assert.deepEqual([1, 2, 3], result)
+    })
 })
 
 describe("every", () => {
     it("all", () => {
         const result = _.every([1, 2, 3], v => v > 0)
-        assert.isTrue(result)
+        assert.strictEqual(result, true)
     })
     it("not all", () => {
         const result = _.every([1, 2, 0], v => v > 0)
-        assert.isFalse(result)
+        assert.strictEqual(result, false)
+    })
+    it("member", () => {
+        const result = _.concat([1, 2, 3]).every(v => v > 0)
+        assert.strictEqual(result, true)
     })
 })
 
@@ -281,12 +354,16 @@ describe("reverse", () => {
         const result = _.reverse([1, 2, 3])
         assert.deepEqual([3, 2, 1], result)
     })
+    it("member", () => {
+        const result = _.concat([1, 2, 3]).reverse()
+        assert.deepEqual([3, 2, 1], result)
+    })
 })
 
 describe("isEmpty", () => {
     it("empty", () => {
         const result = _.isEmpty(undefined)
-        assert.isTrue(result)
+        assert.strictEqual(result, true)
     })
     it("not empty", () => {
         function *iterator() {
@@ -295,11 +372,22 @@ describe("isEmpty", () => {
             assert.fail()
         }
         const result = _.isEmpty(iterator())
-        assert.isFalse(result)
+        assert.strictEqual(result, false)
     })
     it("with undefined", () => {
         const result = _.isEmpty([undefined])
-        assert.isFalse(result)
+        assert.strictEqual(result, false)
+    })
+    it("member", () => {
+        const result = _.concat([2]).isEmpty()
+        assert.strictEqual(result, false)
+    })
+})
+
+describe("entries", () => {
+    it("member", () => {
+        const result = _.toArray(_.iterable(function *(): _.Iterator<string> { yield "a"; yield "b"; yield "c"; }).entries())
+        assert.deepEqual(result, [_.entry(0, "a"), _.entry(1, "b"), _.entry(2, "c")])
     })
 })
 
@@ -316,6 +404,10 @@ describe("findEntry", () => {
         const result = _.findEntry([undefined], () => true)
         assert.deepEqual(result, [0, undefined])
     })
+    it("member", () => {
+        const result = _.concat([0, 1, 0]).findEntry(v => v === 0)
+        assert.deepEqual(result, [0, 0])
+    })
 })
 
 describe("find", () => {
@@ -329,6 +421,10 @@ describe("find", () => {
     })
     it("undefined", () => {
         const result = _.find([undefined], () => true)
+        assert.deepEqual(result, undefined)
+    })
+    it("member", () => {
+        const result = _.concat([0, 1, 0]).find(v => v === 2)
         assert.deepEqual(result, undefined)
     })
 })
@@ -348,10 +444,21 @@ describe("join", () => {
     })
 })
 
+describe("takeWhile", () => {
+    it("member", () => {
+        const result = _.toArray(_.concat(["a", "b", "c", "d"]).takeWhile(v => v !== "c"))
+        assert.deepStrictEqual(result, ["a", "b"])
+    })
+})
+
 describe("take", () => {
     it("1", () => {
         const result = _.toArray(_.take(["a", "b", "c"]))
         assert.deepStrictEqual(result, ["a"])
+    })
+    it("member", () => {
+        const result = _.toArray(_.concat(["a", "b", "c", "d"]).take(2))
+        assert.deepStrictEqual(result, ["a", "b"])
     })
 })
 
@@ -365,7 +472,7 @@ describe("dropRight", () => {
         assert.deepStrictEqual(result, ["a", "b", "c", "d"])
     })
     it("undefined", () => {
-        const result = _.dropRight(undefined)
+        const result = _.dropRight(undefined).toArray()
         assert.deepStrictEqual(result, [])
     })
 })
@@ -385,5 +492,9 @@ describe("uniq", () => {
             v => v.a
         ))
         assert.deepStrictEqual(result, [{ a: 3 }, { a: 1 }, { a: 2 }])
+    })
+    it("member", () => {
+        const result = _.concat([3, 1, 2, 2, 3]).uniq().toArray()
+        assert.deepStrictEqual(result, [3, 1, 2])
     })
 })
