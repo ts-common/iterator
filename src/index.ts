@@ -39,6 +39,7 @@ export interface IterableEx<T> extends Iterable<T> {
     readonly reverse: () => ReadonlyArray<T>
     readonly isEmpty: () => boolean
     readonly uniq: (key?: (v: T) => unknown) => IterableEx<T>
+    readonly toSet: () => Set<T>
 }
 
 // tslint:disable-next-line:no-class
@@ -73,6 +74,7 @@ class IterableImpl<T> implements IterableEx<T> {
     public uniq(key?: (v: T) => unknown) { return uniq(this, key) }
     // tslint:disable-next-line:readonly-array
     public zip(...inputs: Array<Iterable<T>|undefined>) { return zip(this, ...inputs) }
+    public toSet() { return toSet(this) }
 }
 
 export const iterable = <T>(createIterator: () => Iterator<T>): IterableEx<T> =>
@@ -351,3 +353,6 @@ export const uniq = <T>(i: Iterable<T>, key: (v: T) => unknown = v => v): Iterab
             }
         }
     })
+
+export const toSet = <T>(i: Iterable<T>): Set<T> =>
+    fold(i, (set, v) => set.add(v), new Set<T>())

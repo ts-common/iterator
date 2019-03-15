@@ -498,3 +498,10 @@ describe("uniq", () => {
         assert.deepStrictEqual(result, [3, 1, 2])
     })
 })
+
+describe("toSet", () => {
+    it("array", () => {
+        const result = _.concat([1, 2, 3]).toSet()
+        assert.deepStrictEqual(result, new Set([1, 2, 3]))
+    })
+})
