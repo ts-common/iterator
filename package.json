@@ -1,6 +1,6 @@
 {
   "name": "@ts-common/iterator",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Iterator library for JavaScript and TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -48,13 +48,13 @@
   "devDependencies": {
     "@types/mocha": "^5.2.6",
     "@types/node": "^11.9.3",
-    "mocha": "^5.2.0",
+    "mocha": "^6.0.2",
     "mocha-junit-reporter": "^1.18.0",
     "mocha-multi-reporters": "^1.1.7",
-    "nyc": "^13.2.0",
-    "tslint": "^5.12.1",
-    "tslint-immutable": "^5.2.0",
-    "typescript": "^3.3.3"
+    "nyc": "^13.3.0",
+    "tslint": "^5.14.0",
+    "tslint-immutable": "^5.4.0",
+    "typescript": "^3.3.3333"
   },
   "dependencies": {
     "@ts-common/tuple": "^0.0.6"

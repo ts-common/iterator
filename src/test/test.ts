@@ -6,15 +6,15 @@ import * as assert from "assert"
 
 describe("map", () => {
     it("array", () => {
-        const result = Array.from(_.map([1, 2, 3], x => x * x))
+        const result = _.map([1, 2, 3], x => x * x).toArray()
         assert.deepEqual([1, 4, 9], result)
     })
     it("undefined", () => {
-        const result = Array.from(_.map(undefined, x => x))
+        const result = _.map(undefined, x => x).toArray()
         assert.deepEqual([], result)
     })
     it("member", () => {
-        const result = Array.from(_.iterable(() => [1, 2, 3][Symbol.iterator]()).map(x => x * x))
+        const result = Array.from(_.chain([1, 2, 3]).map(x => x * x))
         assert.deepEqual([1, 4, 9], result)
     })
 })

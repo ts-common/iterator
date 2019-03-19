@@ -85,6 +85,8 @@ export const entry: <T>(key: number, value: T) => Entry<T> = tuple2
 export const ENTRY_KEY = 0
 export const ENTRY_VALUE = 1
 
+export const chain = <T>(input: ReadonlyArray<T>): IterableEx<T> => iterable(() => input[Symbol.iterator]())
+
 export const entries = <T>(input: Iterable<T>|undefined): IterableEx<Entry<T>> =>
     iterable(function *(): Iterator<Entry<T>> {
         // tslint:disable-next-line:no-if-statement
