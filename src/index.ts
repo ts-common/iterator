@@ -116,7 +116,7 @@ export const map = <T, I>(
 export const drop = <T>(input: Iterable<T>|undefined, n: number = 1): IterableEx<T> =>
     filter(input, (_, i) => n <= i)
 
-export const flatten = <T>(input: Iterable<Iterable<T>|undefined>|undefined): IterableEx<T> =>
+export const flat = <T>(input: Iterable<Iterable<T>|undefined>|undefined): IterableEx<T> =>
     iterable(function *(): Iterator<T> {
         // tslint:disable-next-line:no-if-statement
         if (input === undefined) {
@@ -133,7 +133,7 @@ export const flatten = <T>(input: Iterable<Iterable<T>|undefined>|undefined): It
 
 // tslint:disable-next-line:readonly-array
 export const concat = <T>(...input: Array<Iterable<T>|undefined>): IterableEx<T> =>
-    flatten(input)
+    flat(input)
 
 export const takeWhile = <T>(
     input: Iterable<T>|undefined,
@@ -179,7 +179,7 @@ export const flatMap = <T, I>(
     input: Iterable<I>|undefined,
     func: (v: I, i: number) => Iterable<T>,
 ): IterableEx<T> =>
-    flatten(map(input, func))
+    flat(map(input, func))
 
 export const optionalToArray = <T>(v: T|undefined): ReadonlyArray<T> =>
     v === undefined ? [] : [v]

@@ -60,13 +60,13 @@ describe("filterMap", () => {
     })
 })
 
-describe("flatten", () => {
+describe("flat", () => {
     it("array", () => {
-        const result = Array.from(_.flatten([[1, 2], [2, 3], [3, 4]]))
+        const result = Array.from(_.flat([[1, 2], [2, 3], [3, 4]]))
         assert.deepEqual([1, 2, 2, 3, 3, 4], result)
     })
     it("undefined", () => {
-        const result = Array.from(_.flatten(undefined))
+        const result = Array.from(_.flat(undefined))
         assert.deepEqual([], result)
     })
 })
