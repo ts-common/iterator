@@ -253,7 +253,6 @@ export const min = (input: Iterable<number>|undefined): number =>
 export const max = (input: Iterable<number>|undefined): number =>
     fold(input, (a, b) => Math.max(a, b), -Infinity)
 
-/* tslint:disable-next-line:readonly-array */
 export const zip = <T>(...inputs: readonly (Iterable<T>|undefined)[]): IterableEx<readonly T[]> =>
     iterable(function *(): Iterator<readonly T[]> {
         const iterators = inputs.map(
