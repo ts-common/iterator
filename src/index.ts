@@ -74,8 +74,6 @@ export const iterable = <T>(createIterator: () => Iterator<T>): IterableEx<T> =>
 
 export type Entry<T> = readonly [number, T]
 
-export const entry = <T>(...v: readonly [number, T]) => v
-
 export const ENTRY_KEY = 0
 export const ENTRY_VALUE = 1
 

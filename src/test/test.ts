@@ -387,7 +387,7 @@ describe("isEmpty", () => {
 describe("entries", () => {
     it("member", () => {
         const result = _.toArray(_.iterable(function *(): _.Iterator<string> { yield "a"; yield "b"; yield "c"; }).entries())
-        assert.deepEqual(result, [_.entry(0, "a"), _.entry(1, "b"), _.entry(2, "c")])
+        assert.deepEqual(result, [[0, "a"], [1, "b"], [2, "c"]])
     })
 })
 
