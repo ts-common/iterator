@@ -24,6 +24,7 @@
         "no-object-mutation": true,
         "no-delete": true,
         "no-method-signature": true,
+        "array-type": false,
 
         // Functional style rules
         "no-this": false,
