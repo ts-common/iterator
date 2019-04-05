@@ -27,7 +27,7 @@ export interface IterableEx<T> extends Iterable<T> {
     readonly fold: <A>(func: (a: A, b: T, i: number) => A, init: A) => A
     readonly reduce: (func: (a: T, b: T, i: number) => T) => T|undefined
     readonly last: () => T|undefined
-    readonly some: (func: (v: T, i: number) => boolean) => boolean
+    readonly some: (func?: (v: T, i: number) => boolean) => boolean
     readonly every: (func: (v: T, i: number) => boolean) => boolean
     readonly zip: (...inputs: readonly (Iterable<T>|undefined)[]) => IterableEx<readonly T[]>
     readonly isEqual: <B>(b: Iterable<B>|undefined, e?: (ai: T, bi: B) => boolean) => boolean
@@ -61,7 +61,7 @@ class IterableImpl<T> implements IterableEx<T> {
     public map<R>(func: (v: T, i: number) => R) { return map(this, func) }
     public reduce(func: (a: T, b: T, i: number) => T) { return reduce(this, func) }
     public reverse() { return reverse(this) }
-    public some(func: (v: T, i: number) => boolean) { return some(this, func) }
+    public some(func?: (v: T, i: number) => boolean) { return some(this, func) }
     public take(n?: number) { return take(this, n) }
     public takeWhile(func: (v: T, i: number) => boolean) { return takeWhile(this, func) }
     public toArray() { return toArray(this) }
@@ -228,7 +228,7 @@ export const last = <T>(input: Iterable<T>|undefined): T|undefined =>
 
 export const some = <T>(
     input: Iterable<T>|undefined,
-    func: (v: T, i: number) => boolean,
+    func: (v: T, i: number) => boolean = () => true,
 ): boolean =>
     findEntry(input, func) !== undefined
 
