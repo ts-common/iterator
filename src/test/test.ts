@@ -281,9 +281,17 @@ describe("some", () => {
         const result = _.concat([1, 2, 3, 4]).some(v => v == 4)
         assert.strictEqual(result, true)
     })
+    it("member default, non empty", () => {
+        const result = _.concat([1, 2]).some()
+        assert.strictEqual(result, true)
+    })
+    it("member default, empty", () => {
+        const result = _.concat([]).some()
+        assert.strictEqual(result, false)
+    })
 })
 
-function readonlyArrayOrString(v: ReadonlyArray<string>|string): ReadonlyArray<string>|string {
+function readonlyArrayOrString(v: readonly string[]|string): readonly string[]|string {
     return v
 }
 
