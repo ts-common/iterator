@@ -291,7 +291,7 @@ describe("some", () => {
     })
 })
 
-function readonlyArrayOrString(v: ReadonlyArray<string>|string): ReadonlyArray<string>|string {
+function readonlyArrayOrString(v: readonly string[]|string): readonly string[]|string {
     return v
 }
 
