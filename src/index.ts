@@ -1,17 +1,17 @@
-export interface IteratorResult<T> {
+export type IteratorResult<T> = {
     readonly done: boolean;
     readonly value: T;
 }
 
-export interface Iterator<T> {
+export type Iterator<T> = {
     readonly next: () => IteratorResult<T>;
 }
 
-export interface Iterable<T> {
+export type Iterable<T> = {
     readonly [Symbol.iterator]: () => Iterator<T>;
 }
 
-export interface IterableEx<T> extends Iterable<T> {
+export type IterableEx<T> = Iterable<T> & {
     readonly entries: () => IterableEx<Entry<T>>
     readonly map: <R>(func: (v: T, i: number) => R) => IterableEx<R>
     readonly flatMap: <R>(func: (v: T, i: number) => Iterable<R>) => IterableEx<R>
@@ -316,7 +316,7 @@ export const reverse = <T>(i: Iterable<T>|undefined): readonly T[] =>
     fold(i, (a, b) => [b, ...a], new Array<T>())
 
 export const isEmpty = <T>(i: Iterable<T>|undefined): boolean =>
-    !some(i, () => true)
+    !some(i)
 
 export const join = (i: Iterable<string>|undefined, separator: string): string => {
     const result = reduce(i, (a, b) => a + separator + b)
