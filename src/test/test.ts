@@ -1,7 +1,6 @@
 /* tslint:disable */
 
 import * as _ from "../index"
-import "mocha";
 import * as assert from "assert"
 
 describe("map", () => {
@@ -504,5 +503,14 @@ describe("uniq", () => {
     it("member", () => {
         const result = _.concat([3, 1, 2, 2, 3]).uniq().toArray()
         assert.deepStrictEqual(result, [3, 1, 2])
+    })
+})
+
+describe("chain", () => {
+    it("no this", () => {
+        const c = _.chain([1, 2])
+        const f = c.map
+        const result = f(v => v * 2).toArray()
+        assert.deepStrictEqual(result, [2, 4])
     })
 })

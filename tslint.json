@@ -11,6 +11,7 @@
         "arrow-parens": false,
         "ordered-imports": false,
         "forin": false,
+        "interface-over-type-literal": false,
 
         // Recommended built-in rules
         "no-var-keyword": true,

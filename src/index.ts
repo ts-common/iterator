@@ -1,17 +1,17 @@
-export interface IteratorResult<T> {
+export type IteratorResult<T> = {
     readonly done: boolean;
     readonly value: T;
 }
 
-export interface Iterator<T> {
+export type Iterator<T> = {
     readonly next: () => IteratorResult<T>;
 }
 
-export interface Iterable<T> {
+export type Iterable<T> = {
     readonly [Symbol.iterator]: () => Iterator<T>;
 }
 
-export interface IterableEx<T> extends Iterable<T> {
+export type IterableEx<T> = Iterable<T> & {
     readonly entries: () => IterableEx<Entry<T>>
     readonly map: <R>(func: (v: T, i: number) => R) => IterableEx<R>
     readonly flatMap: <R>(func: (v: T, i: number) => Iterable<R>) => IterableEx<R>
@@ -34,43 +34,40 @@ export interface IterableEx<T> extends Iterable<T> {
     readonly toArray: () => readonly T[]
     readonly reverse: () => readonly T[]
     readonly isEmpty: () => boolean
-    readonly uniq: (key?: (v: T) => unknown) => IterableEx<T>
+    readonly uniq: (key?: (v: T) => unknown) => IterableEx<T>,
 }
 
-// tslint:disable-next-line:no-class
-class IterableImpl<T> implements IterableEx<T> {
-    public readonly [Symbol.iterator]: () => Iterator<T>
-    constructor(createIterator: () => Iterator<T>) {
-        // tslint:disable-next-line:no-expression-statement
-        this[Symbol.iterator] = createIterator
+export const iterable = <T>(createIterator: () => Iterator<T>): IterableEx<T> => {
+    const property = <P extends readonly unknown[], R>(f: (self: Iterable<T>, ...p: P) => R) =>
+        (...p: P) => f(result, ...p)
+    const result: IterableEx<T> = {
+        [Symbol.iterator]: createIterator,
+        concat: property(concat),
+        drop: property(drop),
+        entries: property(entries),
+        every: property(every),
+        filter: property(filter),
+        filterMap: property(filterMap),
+        find: property(find),
+        findEntry: property(findEntry),
+        flatMap: property(flatMap),
+        fold: property(fold),
+        forEach: property(forEach),
+        isEmpty: property(isEmpty),
+        isEqual: property(isEqual),
+        last: property(last),
+        map: property(map),
+        reduce: property(reduce),
+        reverse: property(reverse),
+        some: property(some),
+        take: property(take),
+        takeWhile: property(takeWhile),
+        toArray: property(toArray),
+        uniq: property(uniq),
+        zip: property(zip),
     }
-    public concat(...input: readonly (Iterable<T>|undefined)[]) { return concat(this, ...input) }
-    public drop(n?: number) { return drop(this, n) }
-    public entries() { return entries(this) }
-    public every(func: (v: T, i: number) => boolean) { return every(this, func) }
-    public filter(func: (v: T, i: number) => boolean) { return filter(this, func) }
-    public filterMap<R>(func: (v: T, i: number) => R|undefined) { return filterMap(this, func) }
-    public find(func: (v: T, i: number) => boolean) { return find(this, func) }
-    public findEntry(func: (v: T, i: number) => boolean) { return findEntry(this, func) }
-    public flatMap<R>(func: (v: T, i: number) => Iterable<R>) { return flatMap(this, func) }
-    public fold<A>(func: (a: A, b: T, i: number) => A, init: A) { return fold(this, func, init) }
-    public forEach(func: (v: T, i: number) => void) { return forEach(this, func) }
-    public isEmpty() { return isEmpty(this) }
-    public isEqual<B>(b: Iterable<B>|undefined, e?: (ai: T, bi: B) => boolean) { return isEqual(this, b, e) }
-    public last() { return last(this) }
-    public map<R>(func: (v: T, i: number) => R) { return map(this, func) }
-    public reduce(func: (a: T, b: T, i: number) => T) { return reduce(this, func) }
-    public reverse() { return reverse(this) }
-    public some(func?: (v: T, i: number) => boolean) { return some(this, func) }
-    public take(n?: number) { return take(this, n) }
-    public takeWhile(func: (v: T, i: number) => boolean) { return takeWhile(this, func) }
-    public toArray() { return toArray(this) }
-    public uniq(key?: (v: T) => unknown) { return uniq(this, key) }
-    public zip(...inputs: readonly (Iterable<T>|undefined)[]) { return zip(this, ...inputs) }
+    return result
 }
-
-export const iterable = <T>(createIterator: () => Iterator<T>): IterableEx<T> =>
-    new IterableImpl(createIterator)
 
 export type Entry<T> = readonly [number, T]
 
@@ -144,7 +141,7 @@ export const takeWhile = <T>(
 export const take = <T>(input: Iterable<T>|undefined, n: number = 1) =>
     takeWhile(input, (_, i) => i < n)
 
-export const findEntry =  <T>(
+export const findEntry = <T>(
     input: Iterable<T>|undefined,
     func: (v: T, i: number) => boolean,
 ): Entry<T>|undefined => {
