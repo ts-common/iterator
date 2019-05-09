@@ -4,21 +4,6 @@
   "description": "Iterator library for JavaScript and TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "nyc": {
-    "reporter": [
-      "text",
-      "cobertura",
-      "html"
-    ],
-    "include": [
-      "dist/*.js"
-    ],
-    "check-coverage": true,
-    "lines": 100,
-    "statements": 100,
-    "functions": 100,
-    "branches": 100
-  },
   "scripts": {
     "tsc": "tsc",
     "tslint": "tslint --project tsconfig.json",
