@@ -507,10 +507,25 @@ describe("uniq", () => {
 })
 
 describe("chain", () => {
+    it("Symbol.iterator", () => {
+        const c = _.chain([1, 2])
+        const createIterator = c[Symbol.iterator]
+        const x = _.iterable(createIterator)
+        const result = x.toArray()
+        assert.deepStrictEqual(result, [1, 2])
+    })
     it("no this", () => {
         const c = _.chain([1, 2])
         const f = c.map
         const result = f(v => v * 2).toArray()
         assert.deepStrictEqual(result, [2, 4])
+    })
+})
+
+describe("arrayReverse", () => {
+    it("some value", () => {
+        const c = _.arrayReverse([1, 2, 3])
+        const x = c.last()
+        assert.strictEqual(x, 1)
     })
 })
