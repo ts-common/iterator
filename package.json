@@ -1,6 +1,6 @@
 {
   "name": "@ts-common/iterator",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Iterator library for JavaScript and TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,7 +8,8 @@
     "tsc": "tsc",
     "tslint": "tslint --project tsconfig.json",
     "prepack": "npm install && tsc",
-    "test": "tsc && npm run tslint && jest"
+    "test": "tsc && npm run tslint && jest",
+    "doc": "typedoc --out doc --exclude ./src/test/**/*.ts"
   },
   "jest": {
     "testEnvironment": "node",
@@ -62,12 +63,14 @@
   },
   "homepage": "https://github.com/ts-common/iterator#readme",
   "devDependencies": {
+    "@microsoft/tsdoc": "^0.12.9",
     "@types/jest": "^24.0.13",
     "@types/node": "^11.9.3",
     "jest": "^24.8.0",
     "jest-junit": "^6.4.0",
     "tslint": "^5.16.0",
     "tslint-immutable": "^5.5.2",
+    "typedoc": "git+https://github.com/TypeStrong/typedoc.git",
     "typescript": "^3.4.5"
   },
   "dependencies": {}

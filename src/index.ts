@@ -1,7 +1,7 @@
 /**
  * See this PR https://github.com/microsoft/TypeScript/pull/30790
  */
-export type IteratorResult<T> = {
+export interface IteratorResult<T> {
     /**
      * - Has the value `true` if the iterator is past the end of the iterated sequence. In this case value optionally
      *   specifies the return value of the iterator.
@@ -15,21 +15,21 @@ export type IteratorResult<T> = {
     readonly value: T;
 }
 
-export type Iterator<T> = {
+export interface Iterator<T> {
     /**
      * Returns `IterableResult<T>`.
      */
     readonly next: () => IteratorResult<T>;
 }
 
-export type Iterable<T> = {
+export interface Iterable<T> {
     /**
      * The function returns an iterator.
      */
     readonly [Symbol.iterator]: () => Iterator<T>;
 }
 
-export type IterableEx<T> = Iterable<T> & {
+export interface IterableEx<T> extends Iterable<T> {
     /**
      * The function returns an iterator of a this container own enumerable number-keyed value [key, value] pairs.
      */
