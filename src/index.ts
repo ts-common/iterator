@@ -134,7 +134,7 @@ export type IterableEx<T> = Iterable<T> & {
      */
     readonly uniq: (key?: (v: T) => unknown) => IterableEx<T>,
     /**
-     * Creates a new sequence of accamulated values.
+     * Creates a new sequence of accumulated values. It's exclusive scan so it always returns at least one value.
      */
     readonly scan: <A>(func: (a: A, b: T, i: number) => A, init: A) => IterableEx<A>,
 }
