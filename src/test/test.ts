@@ -529,3 +529,11 @@ describe("arrayReverse", () => {
         assert.strictEqual(x, 1)
     })
 })
+
+describe("scan", () => {
+    it("scan", () => {
+        const c = _.chain([56, 27, 155])
+        const r = c.scan((a, v) => a + v, ":").toArray()
+        assert.deepStrictEqual(r, [":", ":56", ":5627", ":5627155"])
+    })
+})
