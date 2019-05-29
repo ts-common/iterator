@@ -12,6 +12,7 @@
         "ordered-imports": false,
         "forin": false,
         "interface-over-type-literal": false,
+        "object-literal-sort-keys": false,
 
         // Recommended built-in rules
         "no-var-keyword": true,

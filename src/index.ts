@@ -133,6 +133,10 @@ export type IterableEx<T> = Iterable<T> & {
      * removed).
      */
     readonly uniq: (key?: (v: T) => unknown) => IterableEx<T>,
+    /**
+     * Creates a new sequence of accamulated values.
+     */
+    readonly scan: <A>(func: (a: A, b: T, i: number) => A, init: A) => IterableEx<A>,
 }
 
 export const iterable = <T>(createIterator: () => Iterator<T>): IterableEx<T> => {
@@ -164,6 +168,7 @@ export const iterable = <T>(createIterator: () => Iterator<T>): IterableEx<T> =>
         toArray: property(toArray),
         uniq: property(uniq),
         zip: property(zip),
+        scan: property(scan),
     }
 }
 
@@ -295,6 +300,22 @@ export const generate = <T>(func: (i: number) => T, count?: number): IterableEx<
 
 export const repeat = <T>(v: T, count?: number): IterableEx<T> =>
     generate(() => v, count)
+
+export const scan = <T, A>(
+    input: Iterable<T> | undefined,
+    func: (a: A, b: T, i: number) => A,
+    init: A,
+): IterableEx<A> =>
+    iterable(function *() {
+        let result: A = init
+        yield result
+        /* tslint:disable-next-line:no-loop-statement */
+        for (const [index, value] of entries(input)) {
+            /* tslint:disable-next-line:no-expression-statement */
+            result = func(result, value, index)
+            yield result
+        }
+    })
 
 export const fold = <T, A>(
     input: Iterable<T> | undefined,
