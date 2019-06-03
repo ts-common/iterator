@@ -137,6 +137,10 @@ export type IterableEx<T> = Iterable<T> & {
      * Creates a new sequence of accumulated values. It's exclusive scan so it always returns at least one value.
      */
     readonly scan: <A>(func: (a: A, b: T, i: number) => A, init: A) => IterableEx<A>,
+    /**
+     * Creates a new sequence of mapped values. A mapped value is created from accumulated and current value.
+     */
+    readonly flatScan: <A, R>(func: (a: A, b: T, i: number) => readonly [A, Iterable<R>], init: A) => IterableEx<R>,
 }
 
 export const iterable = <T>(createIterator: () => Iterator<T>): IterableEx<T> => {
@@ -169,6 +173,7 @@ export const iterable = <T>(createIterator: () => Iterator<T>): IterableEx<T> =>
         uniq: property(uniq),
         zip: property(zip),
         scan: property(scan),
+        flatScan: property(flatScan),
     }
 }
 
@@ -309,11 +314,28 @@ export const scan = <T, A>(
     iterable(function *() {
         let result: A = init
         yield result
+        // tslint:disable-next-line:no-loop-statement
+        for (const [index, value] of entries(input)) {
+            // tslint:disable-next-line:no-expression-statement
+            result = func(result, value, index)
+            yield result
+        }
+    })
+
+export const flatScan = <T, A, R>(
+    input: Iterable<T> | undefined,
+    func: (a: A, b: T, i: number) => readonly [A, Iterable<R>],
+    init: A
+): IterableEx<R> =>
+    iterable(function *() {
+        let state = init
         /* tslint:disable-next-line:no-loop-statement */
         for (const [index, value] of entries(input)) {
             /* tslint:disable-next-line:no-expression-statement */
-            result = func(result, value, index)
-            yield result
+            const [newState, result] = func(state, value, index)
+            // tslint:disable-next-line:no-expression-statement
+            state = newState
+            yield *result
         }
     })
 
@@ -459,16 +481,17 @@ export const dropRight = <T>(i: readonly T[] | undefined, n: number = 1): Iterab
     i === undefined ? empty() : take(i, i.length - n)
 
 export const uniq = <T>(i: Iterable<T>, key: (v: T) => unknown = v => v): IterableEx<T> =>
-    iterable(function *() {
-        const set = new Set<unknown>()
-        // tslint:disable-next-line:no-loop-statement
-        for (const v of i) {
+    flatScan(
+        i,
+        (set, v: T): readonly [Set<unknown>, readonly T[]] => {
             const k = key(v)
             // tslint:disable-next-line:no-if-statement
             if (!set.has(k)) {
                 // tslint:disable-next-line:no-expression-statement
                 set.add(k)
-                yield v
+                return [set, [v]]
             }
-        }
-    })
+            return [set, []]
+        },
+        new Set<unknown>()
+    )
