@@ -138,7 +138,7 @@ export type IterableEx<T> = Iterable<T> & {
      */
     readonly scan: <A>(func: (a: A, b: T, i: number) => A, init: A) => IterableEx<A>,
     /**
-     * Creates a new sequence of mapped values. A mapped value is created from accumulated and current value.
+     * Firstly, the function maps a state and each element using the `func` function, then flattens the result.
      */
     readonly flatScan: <A, R>(func: (a: A, b: T, i: number) => readonly [A, Iterable<R>], init: A) => IterableEx<R>,
 }
@@ -191,10 +191,10 @@ export const entries = <T>(input: Iterable<T> | undefined): IterableEx<Entry<T>>
             return
         }
         let index = 0
-        /* tslint:disable-next-line:no-loop-statement */
+        // tslint:disable-next-line:no-loop-statement
         for (const value of input) {
             yield [index, value] as const
-            /* tslint:disable-next-line:no-expression-statement */
+            // tslint:disable-next-line:no-expression-statement
             index += 1
         }
     })
@@ -204,7 +204,7 @@ export const map = <T, I>(
     func: (v: I, i: number) => T,
 ): IterableEx<T> =>
     iterable(function *(): Iterator<T> {
-        /* tslint:disable-next-line:no-loop-statement */
+        // tslint:disable-next-line:no-loop-statement
         for (const [index, value] of entries(input)) {
             yield func(value, index)
         }
@@ -219,7 +219,7 @@ export const flat = <T>(input: Iterable<Iterable<T> | undefined> | undefined): I
         if (input === undefined) {
             return
         }
-        /* tslint:disable-next-line:no-loop-statement */
+        // tslint:disable-next-line:no-loop-statement
         for (const v of input) {
             // tslint:disable-next-line:no-if-statement
             if (v !== undefined) {
@@ -236,9 +236,9 @@ export const takeWhile = <T>(
     func: (v: T, i: number) => boolean,
 ): IterableEx<T> =>
     iterable(function *(): Iterator<T> {
-        /* tslint:disable-next-line:no-loop-statement */
+        // tslint:disable-next-line:no-loop-statement
         for (const [index, value] of entries(input)) {
-            /* tslint:disable-next-line:no-if-statement */
+            // tslint:disable-next-line:no-if-statement
             if (!func(value, index)) {
                 return
             }
@@ -294,7 +294,7 @@ export const filter = <T>(
 
 const infinite = (): IterableEx<void> =>
     iterable(function *(): Iterator<void> {
-        /* tslint:disable-next-line:no-loop-statement */
+        // tslint:disable-next-line:no-loop-statement
         while (true) { yield }
     })
 
@@ -329,9 +329,9 @@ export const flatScan = <T, A, R>(
 ): IterableEx<R> =>
     iterable(function *() {
         let state = init
-        /* tslint:disable-next-line:no-loop-statement */
+        // tslint:disable-next-line:no-loop-statement
         for (const [index, value] of entries(input)) {
-            /* tslint:disable-next-line:no-expression-statement */
+            // tslint:disable-next-line:no-expression-statement
             const [newState, result] = func(state, value, index)
             // tslint:disable-next-line:no-expression-statement
             state = newState
@@ -345,9 +345,9 @@ export const fold = <T, A>(
     init: A,
 ): A => {
     let result: A = init
-    /* tslint:disable-next-line:no-loop-statement */
+    // tslint:disable-next-line:no-loop-statement
     for (const [index, value] of entries(input)) {
-        /* tslint:disable-next-line:no-expression-statement */
+        // tslint:disable-next-line:no-expression-statement
         result = func(result, value, index)
     }
     return result
@@ -397,17 +397,17 @@ export const zip = <T>(...inputs: readonly (Iterable<T> | undefined)[]): Iterabl
         const iterators = inputs.map(
             i => i === undefined ? [][Symbol.iterator]() : i[Symbol.iterator](),
         )
-        /* tslint:disable-next-line:no-loop-statement */
+        // tslint:disable-next-line:no-loop-statement
         while (true) {
             const result = new Array<T>(inputs.length)
-            /* tslint:disable-next-line:no-loop-statement */
+            // tslint:disable-next-line:no-loop-statement
             for (const [index, it] of entries(iterators)) {
                 const v = it.next()
-                /* tslint:disable-next-line:no-if-statement */
+                // tslint:disable-next-line:no-if-statement
                 if (v.done) {
                     return
                 }
-                /* tslint:disable-next-line:no-object-mutation no-expression-statement */
+                // tslint:disable-next-line:no-object-mutation no-expression-statement
                 result[index] = v.value
             }
             yield result
