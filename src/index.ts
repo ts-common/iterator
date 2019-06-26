@@ -40,6 +40,10 @@ export type IterableEx<T> = Iterable<T> & {
      */
     readonly map: <R>(func: (v: T, i: number) => R) => IterableEx<R>
     /**
+     *  Returns the first element of this sequence or `undefined` if the sequence is empty.
+     */
+    readonly first: () => T | undefined
+    /**
      * The flatMap() method first maps each element using a mapping function, then flattens the result.
      */
     readonly flatMap: <R>(func: (v: T, i: number) => Iterable<R>) => IterableEx<R>
@@ -95,7 +99,7 @@ export type IterableEx<T> = Iterable<T> & {
      */
     readonly reduce: (func: (a: T, b: T, i: number) => T) => T | undefined
     /**
-     *  Returns the last element of this sequence.
+     *  Returns the last element of this sequence or `undefined` if the sequence is empty.
      */
     readonly last: () => T | undefined
     /**
@@ -174,6 +178,7 @@ export const iterable = <T>(createIterator: () => Iterator<T>): IterableEx<T> =>
         zip: property(zip),
         scan: property(scan),
         flatScan: property(flatScan),
+        first: property(first)
     }
 }
 
@@ -362,6 +367,17 @@ export const reduce = <T>(
         (a, b, i) => a !== undefined ? func(a, b, i) : b,
         undefined,
     )
+
+export const first = <T>(input: Iterable<T> | undefined): T | undefined => {
+    // tslint:disable-next-line:no-if-statement
+    if (input !== undefined) {
+        // tslint:disable-next-line:no-loop-statement
+        for (const v of input) {
+            return v
+        }
+    }
+    return undefined
+}
 
 export const last = <T>(input: Iterable<T> | undefined): T | undefined =>
     reduce(input, (_, v) => v)
