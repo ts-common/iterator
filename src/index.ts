@@ -1,7 +1,3 @@
-/**
- * See this PR https://github.com/microsoft/TypeScript/pull/30790
- */
-
 export type IterableEx<T> = Iterable<T> & {
     /**
      * The function returns an iterator of a this container own enumerable number-keyed value [key, value] pairs.
