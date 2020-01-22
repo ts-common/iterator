@@ -1,33 +1,6 @@
 /**
  * See this PR https://github.com/microsoft/TypeScript/pull/30790
  */
-export type IteratorResult<T> = {
-    /**
-     * - Has the value `true` if the iterator is past the end of the iterated sequence. In this case value optionally
-     *   specifies the return value of the iterator.
-     * - Has the value `false` if the iterator was able to produce the next value in the sequence. This is equivalent of
-     *   not specifying the done property altogether.
-     */
-    readonly done: boolean;
-    /**
-     * any JavaScript value returned by the iterator. Can be omitted when done is true.
-     */
-    readonly value: T;
-}
-
-export type Iterator<T> = {
-    /**
-     * Returns `IterableResult<T>`.
-     */
-    readonly next: () => IteratorResult<T>;
-}
-
-export type Iterable<T> = {
-    /**
-     * The function returns an iterator.
-     */
-    readonly [Symbol.iterator]: () => Iterator<T>;
-}
 
 export type IterableEx<T> = Iterable<T> & {
     /**
@@ -395,8 +368,11 @@ export const every = <T>(
     !some(input, (v, i) => !func(v, i))
 
 export const forEach = <T>(input: Iterable<T> | undefined, func: (v: T, i: number) => void): void => {
-    // tslint:disable-next-line:no-expression-statement
-    fold<T, void>(input, (_, v, i) => { func(v, i) }, undefined)
+    // tslint:disable-next-line: no-loop-statement
+    for (const [index, value] of entries(input)) {
+        // tslint:disable-next-line: no-expression-statement
+        func(value, index)
+    }
 }
 
 export const sum = (input: Iterable<number> | undefined): number =>
@@ -420,7 +396,7 @@ export const zip = <T>(...inputs: readonly (Iterable<T> | undefined)[]): Iterabl
             for (const [index, it] of entries(iterators)) {
                 const v = it.next()
                 // tslint:disable-next-line:no-if-statement
-                if (v.done) {
+                if (v.done === true) {
                     return
                 }
                 // tslint:disable-next-line:no-object-mutation no-expression-statement
@@ -453,7 +429,7 @@ export const isEqual = <A, B>(
         const av = ai.next()
         const bv = bi.next()
         // tslint:disable-next-line:no-if-statement
-        if (av.done || bv.done) {
+        if (av.done === true || bv.done === true) {
             return av.done === bv.done
         }
         // tslint:disable-next-line:no-if-statement

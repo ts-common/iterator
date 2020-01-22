@@ -392,7 +392,7 @@ describe("isEmpty", () => {
 
 describe("entries", () => {
     it("member", () => {
-        const result = _.toArray(_.iterable(function *(): _.Iterator<string> { yield "a"; yield "b"; yield "c"; }).entries())
+        const result = _.toArray(_.iterable(function *() { yield "a"; yield "b"; yield "c"; }).entries())
         expect(result).toEqual([[0, "a"], [1, "b"], [2, "c"]])
     })
 })
