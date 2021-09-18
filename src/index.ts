@@ -1,3 +1,17 @@
+export type Iterator<T> = {
+    /**
+     * Returns `IterableResult<T>`.
+     */
+    readonly next: () => IteratorResult<T>;
+}
+
+export type Iterable<T> = {
+    /**
+     * The function returns an iterator.
+     */
+    readonly [Symbol.iterator]: () => Iterator<T>;
+}
+
 export type IterableEx<T> = Iterable<T> & {
     /**
      * The function returns an iterator of a this container own enumerable number-keyed value [key, value] pairs.
