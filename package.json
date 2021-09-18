@@ -1,6 +1,6 @@
 {
   "name": "@ts-common/iterator",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Iterator library for JavaScript and TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -66,10 +66,10 @@
     "@types/jest": "^24.9.0",
     "jest": "^25.1.0",
     "jest-junit": "^10.0.0",
+    "tslib": "^2.3.1",
     "tslint": "^6.0.0",
     "tslint-immutable": "^6.0.1",
-    "typescript": "^3.7.5",
-    "tslib": "^1.10.0"
+    "typescript": "^3.7.5"
   },
   "dependencies": {},
   "peerDependencies": {
