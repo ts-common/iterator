@@ -12,6 +12,10 @@ export type Iterable<T> = {
     readonly [Symbol.iterator]: () => Iterator<T>;
 }
 
+import { IterableInternal } from "./iterableInternalType";
+
+export type Iterable<T> = IterableInternal<T>;
+
 export type IterableEx<T> = Iterable<T> & {
     /**
      * The function returns an iterator of a this container own enumerable number-keyed value [key, value] pairs.
