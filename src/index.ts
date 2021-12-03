@@ -1,6 +1,16 @@
-/**
- * See this PR https://github.com/microsoft/TypeScript/pull/30790
- */
+export type Iterator<T> = {
+    /**
+     * Returns `IterableResult<T>`.
+     */
+    readonly next: () => IteratorResult<T>;
+}
+
+export type Iterable<T> = {
+    /**
+     * The function returns an iterator.
+     */
+    readonly [Symbol.iterator]: () => Iterator<T>;
+}
 
 import { IterableInternal } from "./iterableInternalType";
 
